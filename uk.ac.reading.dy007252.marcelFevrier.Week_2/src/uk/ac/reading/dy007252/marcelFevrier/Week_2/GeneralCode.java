@@ -48,11 +48,20 @@ public class GeneralCode {
 		JOptionPane.showMessageDialog(null, sd.toString());
 		
 	}
+	
+	static void Exercise4() {
+		
+		String input = JOptionPane.showInputDialog(null, "Enter two strings seperated by \";\"");
+		
+		AnagramCheck anagram = new AnagramCheck(input);
+		anagram.Report();
+		
+	}
 
 	public static void main(String[] args) {
 
 		String choiceStr = JOptionPane.showInputDialog(null,
-				"Menu\n\n1)\tMultiplication Table (Ex 1)\n2)\tString Splitter (Ex 2)\n3)\tSmallest Difference (Ex 3)");
+				"Menu\n\n1)\tMultiplication Table (Ex 1)\n2)\tString Splitter (Ex 2)\n3)\tSmallest Difference (Ex 3)\n4)\tAnagram Check (Ex 4)");
 
 		int choice = Integer.parseInt(choiceStr);
 
@@ -65,6 +74,9 @@ public class GeneralCode {
 			break;
 		case 3:
 			Exercise3();
+		case 4:
+			Exercise4();
+			break;
 		}
 
 	}
