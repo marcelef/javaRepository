@@ -11,13 +11,13 @@ public class AnagramCheck {
 		strings = new String[2];
 
 		strings = input.split(";");
+		
 	}
 
 	public void run() {
 		
 		isAnagram = areAnagrams(strings[0], strings[1]);
-
-		this.report(isAnagram, strings[0], strings[1]);
+		
 	}
 
 	protected boolean areAnagrams(String str1, String str2) {
@@ -60,11 +60,25 @@ public class AnagramCheck {
 		}
 		return newStr;
 	}
-
-	public void report(boolean areAnagramsBool, String str1, String str2) {
+	
+	public void report() {
 		String not = "";
-		not = (areAnagramsBool) ? "" : "NOT ";
+		not = (isAnagram) ? "" : "NOT ";
+		
+		JOptionPane.showMessageDialog(null, this.strings[0] + " and " + this.strings[1] + " are " + not + "anagrams");
+	}
 
-		JOptionPane.showMessageDialog(null, str1 + " and " + str2 + " are " + not + "anagrams.");
+	public void report(AnagramCheck[] anagrams) {
+		String not = "";
+		String res = "";
+		
+		int counter = 0;
+		
+		for (AnagramCheck anAnagram : anagrams) {
+			counter++;
+			not = (anAnagram.isAnagram) ? "" : "NOT ";
+			res += anAnagram.strings[0] + " and " + anAnagram.strings[1] + " are "  + not + "anagrams.\n";
+		}
+		JOptionPane.showMessageDialog(null, res);
 	}
 }
