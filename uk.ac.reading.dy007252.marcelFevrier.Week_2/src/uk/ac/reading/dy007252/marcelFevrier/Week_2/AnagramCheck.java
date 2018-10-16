@@ -3,6 +3,8 @@ package uk.ac.reading.dy007252.marcelFevrier.Week_2;
 import javax.swing.JOptionPane;
 
 public class AnagramCheck {
+	
+	//Git test
 
 	protected String[] strings;
 	private boolean isAnagram;
