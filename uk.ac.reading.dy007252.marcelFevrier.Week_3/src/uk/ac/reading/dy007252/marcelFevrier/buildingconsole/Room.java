@@ -9,8 +9,9 @@ public class Room {
 	private int[][] corners = new int[2][3];
 	private int defaultSize = 1;
 
-	/*
-	 * The constructor of the room object takes a string as an argument
+	/**
+	 * Instantiates the room with a definition of its corners and the location of the room's door.
+	 * @param params The string used to instantiate the room object.
 	 */
 	public Room(String params) {
 		String paramArr[] = params.split(" "); // Split the parameter into separate parameters
@@ -30,6 +31,11 @@ public class Room {
 
 	}
 
+	/**
+	 * Determines whether a give coordinate is within the current room or not.
+	 * @param p The point variable to be determined whether it is in the room or not.
+	 * @return A boolean value of true or false depending on whether the given parameter is within the room or not.
+	 */
 	public boolean isInRoom(Point p) {
 
 		if (isBetween(this.corners[0][0], this.corners[1][0], (int) p.getX())
@@ -40,7 +46,14 @@ public class Room {
 		}
 
 	}
-
+	
+	/**
+	 * Determines whether a particular point lays between two given boundary points.
+	 * @param firstPoint The first of the two given boundary points which the inspected point must be between.
+	 * @param secondPoint The second of the two given boundary points which the inspected point must be between.
+	 * @param x The actual point being determined whether it lays between the two given boundary points.
+	 * @return true or false depending on whether or not the inpsected point lays between the two boundary points.
+	 */
 	private boolean isBetween(int firstPoint, int secondPoint, int x) {
 
 		if (firstPoint > secondPoint) {
@@ -63,7 +76,11 @@ public class Room {
 		} else
 			return false;
 	}
-
+	
+	/**
+	 * Converts the current room object into a textual representation which can be displayed.
+	 * @return A string/textual representation of the room object which can be displayed.
+	 */
 	public String toString() {
 		String res = "";
 

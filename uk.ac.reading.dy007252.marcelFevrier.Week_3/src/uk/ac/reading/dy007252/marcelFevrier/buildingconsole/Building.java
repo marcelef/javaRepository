@@ -1,20 +1,37 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Building {
 	
+	/**
+	 * The dimensions of the building are stored in xSize and ySize
+	 */
 	private int xSize;
 	private int ySize;
+	
+	private Point personPos;
 
 	ArrayList<Room> allRooms = new ArrayList<Room>();
 	
+	/**
+	 * @param params The parameter string passed to the building to instantiate it.
+	 */
 	public Building(String params) {
+		this.setBuilding(params);
+	}
+	
+	/**
+	 * Instantiates the building using a string of parameters.
+	 * @param params The parameter string passed to the building to instantiate it.
+	 */
+	public void setBuilding(String params) {
 		String[] paramsArr = params.split(";");
-		String[] paramsDimentions = paramsArr[0].split(" ");
+		String[] paramsDimensions = paramsArr[0].split(" ");
 		
-		this.xSize = Integer.parseInt(paramsDimentions[0]);
-		this.ySize = Integer.parseInt(paramsDimentions[1]);
+		this.xSize = Integer.parseInt(paramsDimensions[0]);
+		this.ySize = Integer.parseInt(paramsDimensions[1]);
 		
 		for (int step = 1; step < paramsArr.length; step++) {
 			Room tempRoom = new Room(paramsArr[step]);
@@ -22,18 +39,24 @@ public class Building {
 		}
 	}
 	
+	/**
+	 * Removes all rooms in currently instantiated within the building.
+	 */
 	public void clearBuilding() {
 		allRooms.clear();
 	}
 	
+	/**
+	 * Converts the building's properties into one string for displaying.
+	 */
 	public String toString() {
 		
-		String res = "";
+		String res = "";  // The string that will be returned to the caller
 		
-		res += "The building's dimentions are " + this.xSize + "*" + this.ySize + ".\n\n";
+		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";
 		
-		for (Room r:allRooms) {
-			res += r.toString() + "\n";
+		for (Room r:allRooms) { 
+			res += r.toString() + "\n"; // Gets the string representation of each room currently in the building and appends to the return result
 		}
 		
 		return res;
