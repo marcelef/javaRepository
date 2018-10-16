@@ -1,6 +1,7 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
 import java.awt.Point;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -47,12 +48,35 @@ public class Room {
 
 	}
 	
+	public Point randomPosition(Random rand) {
+		
+		int x;
+		int y;
+		
+		if (this.corners[0][0] > this.corners[1][0]) {
+			x = this.corners[1][0] + 1 + rand.nextInt(this.corners[0][0] - this.corners[1][0] - 2);
+		} else {
+			x = this.corners[0][0] + 1 + rand.nextInt(this.corners[1][0] - this.corners[0][0] - 2);
+		}
+		
+		if (this.corners[0][1] > this.corners[1][1]) {
+			y = this.corners[1][1] + 1 + rand.nextInt(this.corners[0][1] - this.corners[1][1] - 2);
+		} else {
+			y = this.corners[0][1] + 1 + rand.nextInt(this.corners[1][1] - this.corners[0][1] - 2);
+		}
+		
+//		x = this.corners[0][0] + 1 + rand.nextInt(this.corners[1][0] - this.corners[0][0] - 2);
+//		y = this.corners[0][1] + 1 + rand.nextInt(this.corners[1][1] - this.corners[0][1] - 2);
+		
+		return new Point(x,y);
+	}
+	
 	/**
 	 * Determines whether a particular point lays between two given boundary points.
 	 * @param firstPoint The first of the two given boundary points which the inspected point must be between.
 	 * @param secondPoint The second of the two given boundary points which the inspected point must be between.
 	 * @param x The actual point being determined whether it lays between the two given boundary points.
-	 * @return true or false depending on whether or not the inpsected point lays between the two boundary points.
+	 * @return true or false depending on whether or not the inspected point lays between the two boundary points.
 	 */
 	private boolean isBetween(int firstPoint, int secondPoint, int x) {
 
@@ -84,26 +108,26 @@ public class Room {
 	public String toString() {
 		String res = "";
 
-		res += "Corners are at x = " + corners[0][0] + " and y = " + corners[0][1] + " with size " + corners[0][2]
+		res += "Corner at " + corners[0][0] + "," + corners[0][1] + " with size " + corners[0][2]
 				+ "\n";
-		res += "Corners are at x = " + corners[1][0] + " and y = " + corners[1][1] + " with size " + corners[1][2]
+		res += "Corner at " + corners[1][0] + "," + corners[1][1] + " with size " + corners[1][2]
 				+ "\n";
-		res += "Door is at x = " + door[0] + " and y = " + door[1] + " with size " + door[2] + "\n";
+		res += "Door is at " + door[0] + "," + door[1] + " with size " + door[2] + "\n";
 
 		return res;
 	}
 
-//	public static void main(String[] args) {
-//
-//		Room room = new Room("0 0 5 5 0 2");
-//
-//		String res = room.toString();
-//		
-//		Point testPoint = new Point(1,2);
-//		
-//		boolean test = room.isInRoom(testPoint);
-//
-//		JOptionPane.showMessageDialog(null, test);
-//
-//	}
+	public static void main(String[] args) {
+
+		Room room = new Room("0 0 5 5 0 2");
+
+		String res = room.toString();
+		
+		Random randomVal = new Random();
+		
+		Point testPoint = room.randomPosition(randomVal);
+
+		JOptionPane.showMessageDialog(null, "(" + (int) testPoint.getX() + "," + (int) testPoint.getY() + ")");
+
+	}
 }

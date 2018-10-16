@@ -7,7 +7,11 @@ public class Person {
 	private Point pos;
 	
 	public Person() {
-		this.setPosition(0, 0);
+		this.pos = new Point(0,0);
+	}
+	
+	public Person(int x, int y) {
+		this.pos = new Point(x,y);
 	}
 	
 	public void setPosition(int x, int y) {

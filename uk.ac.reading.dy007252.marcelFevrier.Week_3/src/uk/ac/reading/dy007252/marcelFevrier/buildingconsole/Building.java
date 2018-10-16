@@ -1,7 +1,7 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
-import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Building {
 	
@@ -11,8 +11,10 @@ public class Building {
 	private int xSize;
 	private int ySize;
 	
-	private Point personPos;
-
+	private Person person;
+	
+	private Random rand;
+	
 	ArrayList<Room> allRooms = new ArrayList<Room>();
 	
 	/**
@@ -20,6 +22,10 @@ public class Building {
 	 */
 	public Building(String params) {
 		this.setBuilding(params);
+		
+		person = new Person(1,1);
+		
+		rand = new Random();
 	}
 	
 	/**
@@ -58,6 +64,8 @@ public class Building {
 		for (Room r:allRooms) { 
 			res += r.toString() + "\n"; // Gets the string representation of each room currently in the building and appends to the return result
 		}
+		
+		res += "The person is located at " + (int) person.getPosition().getX() + "," + (int) person.getPosition().getY() + ".\n";
 		
 		return res;
 	}
