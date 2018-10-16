@@ -76,17 +76,17 @@ public class Room {
 		return res;
 	}
 
-	public static void main(String[] args) {
-
-		Room room = new Room("0 0 5 5 0 2");
-
-		String res = room.toString();
-		
-		Point testPoint = new Point(1,2);
-		
-		boolean test = room.isInRoom(testPoint);
-
-		JOptionPane.showMessageDialog(null, test);
-
-	}
+//	public static void main(String[] args) {
+//
+//		Room room = new Room("0 0 5 5 0 2");
+//
+//		String res = room.toString();
+//		
+//		Point testPoint = new Point(1,2);
+//		
+//		boolean test = room.isInRoom(testPoint);
+//
+//		JOptionPane.showMessageDialog(null, test);
+//
+//	}
 }
