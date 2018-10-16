@@ -1,5 +1,7 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
+import javax.swing.JOptionPane;
+
 public class Room {
 	private int[] door = new int[3];
 	private int[][] corners = new int[2][3];
@@ -27,10 +29,25 @@ public class Room {
 	}
 	
 	public String toString(){
+		String res = "";
 		
+		res += "Corners are at x = " + corners[0][0] + " and y = " + corners[0][1] + " with size " + corners[0][2] + "\n";
+		res += "Corners are at x = " + corners[1][0] + " and y = " + corners[1][1] + " with size " + corners[1][2] + "\n";
+		res += "Door is at x = " + door[0] + " and y = " + door[1] + " with size " + door[2] + "\n";
 		
-		
-		return null;
+		return res;
 	}
 	
+	
+	public static void main(String[] args){
+		
+		Room room = new Room("0 0 5 5 0 2");
+		
+		String res = room.toString();
+		
+		JOptionPane.showMessageDialog(null, res);
+		
+	}
 }
+
+
