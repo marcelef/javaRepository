@@ -54,15 +54,15 @@ public class Room {
 		int y;
 		
 		if (this.corners[0][0] > this.corners[1][0]) {
-			x = this.corners[1][0] + 1 + rand.nextInt(this.corners[0][0] - this.corners[1][0] - 2);
+			x = this.corners[1][0] + 1 + rand.nextInt(this.corners[0][0] - this.corners[1][0] - 1);
 		} else {
-			x = this.corners[0][0] + 1 + rand.nextInt(this.corners[1][0] - this.corners[0][0] - 2);
+			x = this.corners[0][0] + 1 + rand.nextInt(this.corners[1][0] - this.corners[0][0] - 1);
 		}
 		
 		if (this.corners[0][1] > this.corners[1][1]) {
-			y = this.corners[1][1] + 1 + rand.nextInt(this.corners[0][1] - this.corners[1][1] - 2);
+			y = this.corners[1][1] + 1 + rand.nextInt(this.corners[0][1] - this.corners[1][1] - 1);
 		} else {
-			y = this.corners[0][1] + 1 + rand.nextInt(this.corners[1][1] - this.corners[0][1] - 2);
+			y = this.corners[0][1] + 1 + rand.nextInt(this.corners[1][1] - this.corners[0][1] - 1);
 		}
 		
 //		x = this.corners[0][0] + 1 + rand.nextInt(this.corners[1][0] - this.corners[0][0] - 2);

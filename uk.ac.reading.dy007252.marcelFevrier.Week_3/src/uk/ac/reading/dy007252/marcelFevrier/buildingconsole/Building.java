@@ -46,6 +46,15 @@ public class Building {
 	}
 	
 	/**
+	 * Selects a random room from all current rooms in the building.
+	 * @return The index of a randomly selected room within the building.
+	 */
+	public int getRandomRoom() {
+		int randRoom = this.rand.nextInt(this.allRooms.size());
+		return randRoom;
+	}
+	
+	/**
 	 * Removes all rooms in currently instantiated within the building.
 	 */
 	public void clearBuilding() {
