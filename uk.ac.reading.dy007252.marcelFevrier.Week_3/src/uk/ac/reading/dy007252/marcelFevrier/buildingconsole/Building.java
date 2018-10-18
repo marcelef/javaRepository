@@ -5,15 +5,13 @@ import java.util.Random;
 
 public class Building {
 	
-	// GIT branch test
-	
 	/**
 	 * The dimensions of the building are stored in xSize and ySize
 	 */
 	private int xSize;
 	private int ySize;
 	
-	private Person person;
+	private ArrayList<Person> persons = new ArrayList<Person>();
 	
 	private Random rand;
 	
@@ -27,7 +25,7 @@ public class Building {
 		
 		rand = new Random();
 		
-		person = new Person(this.getRandomRoom().randomPosition(rand));
+		persons.add(new Person(this.getRandomRoom().randomPosition(rand)));
 		
 	}
 	
@@ -64,8 +62,26 @@ public class Building {
 		allRooms.clear();
 	}
 	
+	public void showBuilding(BuildingInterface bi) {
+		
+		for (Room r : this.allRooms) {
+			r.showRoom(bi);
+		}
+		
+		
+	}
+	
+	public int getXSize() {
+		return this.xSize;
+	}
+	
+	public int getYSize() {
+		return this.ySize;
+	}
+	
 	/**
-	 * Converts the building's properties into one string for displaying.
+	 * Converts the building's properties into one string which can be displayed.
+	 * @return a String object representation of the entire building.
 	 */
 	public String toString() {
 		
@@ -77,7 +93,7 @@ public class Building {
 			res += r.toString() + "\n"; // Gets the string representation of each room currently in the building and appends to the return result
 		}
 		
-		res += "The person is located at " + (int) person.getPosition().getX() + "," + (int) person.getPosition().getY() + ".\n";
+		res += "The person is located at " + (int) persons.get(0).getPosition().getX() + "," + (int) persons.get(0).getPosition().getY() + ".\n";
 		
 		return res;
 	}
