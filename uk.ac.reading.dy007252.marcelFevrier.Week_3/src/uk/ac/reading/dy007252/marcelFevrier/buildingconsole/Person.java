@@ -14,6 +14,10 @@ public class Person {
 		this.pos = new Point(x,y);
 	}
 	
+	public Person(Point p) {
+		this.pos = p;
+	}
+	
 	public void setPosition(int x, int y) {
 		pos.setLocation(x, y);
 	}

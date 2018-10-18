@@ -23,9 +23,10 @@ public class Building {
 	public Building(String params) {
 		this.setBuilding(params);
 		
-		person = new Person(1,1);
-		
 		rand = new Random();
+		
+		person = new Person(this.getRandomRoom().randomPosition(rand));
+		
 	}
 	
 	/**
@@ -49,9 +50,9 @@ public class Building {
 	 * Selects a random room from all current rooms in the building.
 	 * @return The index of a randomly selected room within the building.
 	 */
-	public int getRandomRoom() {
+	public Room getRandomRoom() {
 		int randRoom = this.rand.nextInt(this.allRooms.size());
-		return randRoom;
+		return this.allRooms.get(randRoom);
 	}
 	
 	/**
