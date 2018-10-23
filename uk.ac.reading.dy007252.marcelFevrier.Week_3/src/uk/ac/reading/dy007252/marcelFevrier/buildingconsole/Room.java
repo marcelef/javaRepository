@@ -28,20 +28,26 @@ public class Room {
 															// value for the first corner
 		this.corners[0][1] = Integer.parseInt(paramArr[1]); // corners[0][1] is the y value for the first corner
 		this.corners[0][2] = defaultSize; // PLACEHOLDER
-
-		this.newCorners[0].setLocation(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
+		
+		this.newCorners[0] = new Point(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
+		
+		//this.newCorners[0].setLocation(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
 
 		this.corners[1][0] = Integer.parseInt(paramArr[2]); // corners[1] is the second corner
 		this.corners[1][1] = Integer.parseInt(paramArr[3]);
 		this.corners[1][2] = defaultSize; // PLACEHOLDER
 
-		this.newCorners[1].setLocation(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
+		this.newCorners[1] = new Point(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
+		
+		//this.newCorners[1].setLocation(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
 
 		this.door[0] = Integer.parseInt(paramArr[4]);
 		this.door[1] = Integer.parseInt(paramArr[5]);
 		this.door[2] = defaultSize; // PLACEHOLDER
 		
-		this.newDoor.setLocation(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
+		this.newDoor = new Point(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
+		
+		//this.newDoor.setLocation(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
 		
 	}
 
@@ -139,7 +145,18 @@ public class Room {
 
 		res += "Corner at " + corners[0][0] + "," + corners[0][1] + " with size " + corners[0][2] + "\n";
 		res += "Corner at " + corners[1][0] + "," + corners[1][1] + " with size " + corners[1][2] + "\n";
-		res += "Door is at " + door[0] + "," + door[1] + " with size " + door[2] + "\n";
+		
+		res += "\n\nTesting New Corners\n\n";
+		
+		res += "Corner at " + (int)this.newCorners[0].getX() + "," + (int)this.newCorners[0].getY() + " with size " + this.defaultSize + "\n";
+		res += "Corner at " + (int)this.newCorners[1].getX() + "," + (int)this.newCorners[1].getY() + " with size " + this.defaultSize + "\n";
+
+		res += "\nDoor is at " + door[0] + "," + door[1] + " with size " + door[2] + "\n";
+		
+		res += "\n\nTesting new door\n\n";
+		
+		res += "Door is at " + (int)this.newDoor.getX() + "," + (int)this.newDoor.getY() + " with size " + this.defaultSize + "\n";
+
 
 		return res;
 	}
@@ -149,6 +166,8 @@ public class Room {
 		Room room = new Room("0 0 5 5 0 2");
 
 		String res = room.toString();
+		
+		JOptionPane.showMessageDialog(null, res);
 
 		Random randomVal = new Random();
 
