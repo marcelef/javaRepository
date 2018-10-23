@@ -5,6 +5,10 @@ import java.util.Random;
 
 public class Building {
 	
+	/*
+	 * GIT test 
+	 */
+	
 	/**
 	 * The dimensions of the building are stored in xSize and ySize
 	 */
