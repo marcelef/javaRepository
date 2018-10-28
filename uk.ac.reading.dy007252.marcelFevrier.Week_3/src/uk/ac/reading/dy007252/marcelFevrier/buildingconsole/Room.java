@@ -6,13 +6,13 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Room {
-	private int[] door = new int[3];
-	private int[][] corners = new int[2][3];
+	private int[] oldDoor = new int[3];
+	private int[][] oldCorners = new int[2][3];
 	private int defaultSize = 1;
 
-	private Point[] newCorners = new Point[2];
+	private Point[] corners = new Point[2];
 	
-	private Point newDoor;
+	private Point door;
 
 	/**
 	 * Instantiates the room with a definition of its corners and the location of
@@ -24,28 +24,28 @@ public class Room {
 	public Room(String params) {
 		String paramArr[] = params.split(" "); // Split the parameter into separate parameters
 
-		this.corners[0][0] = Integer.parseInt(paramArr[0]); // corners[0] is the first corner, corner[0][0] is the x
+		//this.oldCorners[0][0] = Integer.parseInt(paramArr[0]); // corners[0] is the first corner, corner[0][0] is the x
 															// value for the first corner
-		this.corners[0][1] = Integer.parseInt(paramArr[1]); // corners[0][1] is the y value for the first corner
-		this.corners[0][2] = defaultSize; // PLACEHOLDER
+		//this.oldCorners[0][1] = Integer.parseInt(paramArr[1]); // corners[0][1] is the y value for the first corner
+		//this.oldCorners[0][2] = defaultSize; // PLACEHOLDER
 		
-		this.newCorners[0] = new Point(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
+		this.corners[0] = new Point(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
 		
 		//this.newCorners[0].setLocation(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
 
-		this.corners[1][0] = Integer.parseInt(paramArr[2]); // corners[1] is the second corner
-		this.corners[1][1] = Integer.parseInt(paramArr[3]);
-		this.corners[1][2] = defaultSize; // PLACEHOLDER
+		//this.oldCorners[1][0] = Integer.parseInt(paramArr[2]); // corners[1] is the second corner
+		this.oldCorners[1][1] = Integer.parseInt(paramArr[3]);
+		this.oldCorners[1][2] = defaultSize; // PLACEHOLDER
 
-		this.newCorners[1] = new Point(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
+		this.corners[1] = new Point(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
 		
 		//this.newCorners[1].setLocation(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
 
-		this.door[0] = Integer.parseInt(paramArr[4]);
-		this.door[1] = Integer.parseInt(paramArr[5]);
-		this.door[2] = defaultSize; // PLACEHOLDER
+		this.oldDoor[0] = Integer.parseInt(paramArr[4]);
+		this.oldDoor[1] = Integer.parseInt(paramArr[5]);
+		this.oldDoor[2] = defaultSize; // PLACEHOLDER
 		
-		this.newDoor = new Point(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
+		this.door = new Point(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
 		
 		//this.newDoor.setLocation(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
 		
@@ -62,8 +62,8 @@ public class Room {
 	 */
 	public boolean isInRoom(Point p) {
 
-		if (isBetween((int)this.newCorners[0].getX(), (int)this.newCorners[1].getX(), (int) p.getX())
-				&& isBetween((int)this.newCorners[0].getY(), (int)this.newCorners[1].getY(), (int) p.getY())) {
+		if (isBetween((int)this.corners[0].getX(), (int)this.corners[1].getX(), (int) p.getX())
+				&& isBetween((int)this.corners[0].getY(), (int)this.corners[1].getY(), (int) p.getY())) {
 			return true;
 		} else {
 			return false;
@@ -76,16 +76,16 @@ public class Room {
 		int x;
 		int y;
 
-		if ((int)this.newCorners[0].getX() > (int)this.newCorners[1].getX()) {
-			x = (int)this.newCorners[1].getX() + 1 + rand.nextInt((int)this.newCorners[0].getX() - (int)this.newCorners[1].getX() - 1);
+		if ((int)this.corners[0].getX() > (int)this.corners[1].getX()) {
+			x = (int)this.corners[1].getX() + 1 + rand.nextInt((int)this.corners[0].getX() - (int)this.corners[1].getX() - 1);
 		} else {
-			x = (int)this.newCorners[0].getX() + 1 + rand.nextInt((int)this.newCorners[1].getX() - (int)this.newCorners[0].getX() - 1);
+			x = (int)this.corners[0].getX() + 1 + rand.nextInt((int)this.corners[1].getX() - (int)this.corners[0].getX() - 1);
 		}
 
-		if ((int)this.newCorners[0].getY() > (int)this.newCorners[1].getY()) {
-			y = (int)this.newCorners[1].getY() + 1 + rand.nextInt((int)this.newCorners[0].getY() - (int)this.newCorners[1].getY() - 1);
+		if ((int)this.corners[0].getY() > (int)this.corners[1].getY()) {
+			y = (int)this.corners[1].getY() + 1 + rand.nextInt((int)this.corners[0].getY() - (int)this.corners[1].getY() - 1);
 		} else {
-			y = (int)this.newCorners[0].getY() + 1 + rand.nextInt((int)this.newCorners[1].getY() - (int)this.newCorners[0].getY() - 1);
+			y = (int)this.corners[0].getY() + 1 + rand.nextInt((int)this.corners[1].getY() - (int)this.corners[0].getY() - 1);
 		}
 
 		return new Point(x, y);
@@ -130,7 +130,23 @@ public class Room {
 	}
 
 	public void showRoom(BuildingInterface bi) {
-
+		for (int row = (int)this.corners[0].getY(); row <= (int)this.corners[1].getY(); row++) {
+			for (int col = (int)this.corners[0].getX(); col <= (int)this.corners[1].getX(); col++) {
+				if (row == (int)this.corners[0].getY() || row == (int)this.corners[1].getY()) {
+					bi.drawing[row+1][col+1] = '-';
+				}
+				else if (col == (int)this.corners[0].getX() || col == (int)this.corners[1].getX()) {
+					bi.drawing[row+1][col+1] = '|';
+				}
+				if (row == (int)this.door.getY() && col == (int)this.door.getX()) {
+					bi.drawing[row+1][col+1] = ' ';
+				}
+			}
+		}
+	}
+	
+	public Point getDoorLocation() {
+		return this.door;
 	}
 
 	/**
@@ -143,19 +159,19 @@ public class Room {
 	public String toString() {
 		String res = "";
 
-		res += "Corner at " + corners[0][0] + "," + corners[0][1] + " with size " + corners[0][2] + "\n";
-		res += "Corner at " + corners[1][0] + "," + corners[1][1] + " with size " + corners[1][2] + "\n";
+		res += "Corner at " + oldCorners[0][0] + "," + oldCorners[0][1] + " with size " + oldCorners[0][2] + "\n";
+		res += "Corner at " + oldCorners[1][0] + "," + oldCorners[1][1] + " with size " + oldCorners[1][2] + "\n";
 		
 		res += "\n\nTesting New Corners\n\n";
 		
-		res += "Corner at " + (int)this.newCorners[0].getX() + "," + (int)this.newCorners[0].getY() + " with size " + this.defaultSize + "\n";
-		res += "Corner at " + (int)this.newCorners[1].getX() + "," + (int)this.newCorners[1].getY() + " with size " + this.defaultSize + "\n";
+		res += "Corner at " + (int)this.corners[0].getX() + "," + (int)this.corners[0].getY() + " with size " + this.defaultSize + "\n";
+		res += "Corner at " + (int)this.corners[1].getX() + "," + (int)this.corners[1].getY() + " with size " + this.defaultSize + "\n";
 
-		res += "\nDoor is at " + door[0] + "," + door[1] + " with size " + door[2] + "\n";
+		res += "\nDoor is at " + oldDoor[0] + "," + oldDoor[1] + " with size " + oldDoor[2] + "\n";
 		
 		res += "\n\nTesting new door\n\n";
 		
-		res += "Door is at " + (int)this.newDoor.getX() + "," + (int)this.newDoor.getY() + " with size " + this.defaultSize + "\n";
+		res += "Door is at " + (int)this.door.getX() + "," + (int)this.door.getY() + " with size " + this.defaultSize + "\n";
 
 
 		return res;

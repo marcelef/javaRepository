@@ -17,7 +17,7 @@ public class BuildingInterface {
 	 */
 	public String buildingString(int bOpt) {
 		if (bOpt == 1)
-			return "11 11;0 0 5 5 3 5;6 0 10 10 6 6;0 5 5 10 2 5";
+			return "11 11;0 0 4 4 2 4;6 0 10 10 6 6;0 6 4 10 2 6";
 		else
 			return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
 	}
@@ -36,7 +36,7 @@ public class BuildingInterface {
 
 		char ch = ' ';
 		do {
-			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw > ");
+			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw, (M)ove > ");
 			ch = s.next().charAt(0);
 			s.nextLine();
 			switch (ch) {
@@ -54,7 +54,12 @@ public class BuildingInterface {
 				break;
 			case 'D':
 			case 'd':
-				this.draw();
+				this.doDisplay();
+				break;
+			case 'M':
+			case 'm':
+				myBuilding.movePerson();
+				this.doDisplay();
 				break;
 
 			}
@@ -63,20 +68,10 @@ public class BuildingInterface {
 		s.close(); // close scanner
 	}
 	
-	public void draw() {
+	public void doDisplay() {
 		
 		int xSize = myBuilding.getXSize();
 		int ySize = myBuilding.getYSize();
-		
-		for (int row = 0; row < xSize + 2; row++) {
-			for (int col = 0; col < ySize + 2; col++) {
-				if ((row == 0 || row == xSize + 1) || (col == 0 || col == ySize + 1)) {
-					this.drawing[row][col] = '#';
-				} else {
-					this.drawing[row][col] = ' ';
-				}
-			}
-		}
 		
 		myBuilding.showBuilding(this);
 		
