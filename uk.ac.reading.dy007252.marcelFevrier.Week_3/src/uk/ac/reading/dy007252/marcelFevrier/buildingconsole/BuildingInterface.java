@@ -1,6 +1,7 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class BuildingInterface {
 
@@ -61,6 +62,9 @@ public class BuildingInterface {
 				myBuilding.movePerson();
 				this.doDisplay();
 				break;
+			case 'a':
+			case 'A':
+				this.animate();
 
 			}
 		} while (ch != 'X'); // test if end
@@ -81,6 +85,19 @@ public class BuildingInterface {
 				if (col == ySize + 1) {
 					System.out.print("\n");
 				}
+			}
+		}
+	}
+	
+	public void animate() {
+		while (!myBuilding.getPersonAtDoor()) {
+			myBuilding.movePerson();
+			this.doDisplay();
+			
+			try {
+				TimeUnit.MILLISECONDS.sleep(500);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

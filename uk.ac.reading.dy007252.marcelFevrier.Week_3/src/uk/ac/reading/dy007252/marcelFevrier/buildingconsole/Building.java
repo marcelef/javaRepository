@@ -10,6 +10,8 @@ public class Building {
 	 */
 	private int xSize;
 	private int ySize;
+	
+	private boolean personAtDoor;
 
 	private ArrayList<Person> persons = new ArrayList<Person>();
 
@@ -31,6 +33,8 @@ public class Building {
 		persons.add(new Person(randRoom.randomPosition(rand)));
 		
 		persons.get(0).setDoorPos(randRoom.getDoorLocation());
+		
+		this.personAtDoor = false;
 
 	}
 
@@ -116,7 +120,11 @@ public class Building {
 	}
 	
 	public void movePerson() {
-		persons.get(0).movePerson();
+		this.personAtDoor = persons.get(0).movePerson();
+	}
+	
+	public boolean getPersonAtDoor() {
+		return this.personAtDoor;
 	}
 
 	/**

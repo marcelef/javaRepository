@@ -6,7 +6,7 @@ public class Person {
 
 	private Point pos;
 	private Point doorPos;
-
+	
 	public Person() {
 		this.pos = new Point(0, 0);
 		this.doorPos = new Point(0, 0);
@@ -43,7 +43,7 @@ public class Person {
 	 * @param x
 	 *            the new x value of the person's location.
 	 * @param y
-	 *            the new y value of teh person's location.
+	 *            the new y value of the person's location.
 	 */
 	public void setPosition(int x, int y) {
 		pos.setLocation(x, y);
@@ -70,25 +70,32 @@ public class Person {
 		this.doorPos.setLocation(x, y);
 	}
 
-	public void movePerson() {
+	public boolean movePerson() {
 
 		int dx = 0;
 		int dy = 0;
 
-		if (this.pos != this.doorPos) {
+		if (!this.pos.equals(this.doorPos)) {
 			if (this.pos.getX() > this.doorPos.getX()) {
 				dx = -1;
 			} else if (this.pos.getX() < this.doorPos.getX()) {
 				dx = 1;
-			} else dx = 0;
-			
+			} else
+				dx = 0;
+
 			if (this.pos.getY() > this.doorPos.getY()) {
 				dy = -1;
 			} else if (this.pos.getY() < this.doorPos.getY()) {
 				dy = 1;
-			} else dy = 0;
-			
+			} else
+				dy = 0;
+
 			this.pos.translate(dx, dy);
+			
+			if (this.pos.equals(this.doorPos)) return true; else return false;
+			
+		} else {
+			return true;
 		}
 	}
 
