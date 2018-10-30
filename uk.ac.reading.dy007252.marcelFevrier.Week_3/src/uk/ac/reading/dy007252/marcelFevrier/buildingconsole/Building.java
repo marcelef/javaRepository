@@ -28,7 +28,7 @@ public class Building {
 		
 		Room randRoom = this.getRandomRoom();
 
-		persons.add(new Person(9,1));
+		persons.add(new Person(randRoom.randomPosition(rand)));
 		
 		persons.get(0).setDoorPos(randRoom.getDoorLocation());
 
