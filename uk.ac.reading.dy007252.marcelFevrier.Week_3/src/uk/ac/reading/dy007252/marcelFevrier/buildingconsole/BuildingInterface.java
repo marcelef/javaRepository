@@ -37,7 +37,7 @@ public class BuildingInterface {
 
 		char ch = ' ';
 		do {
-			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw, (M)ove > ");
+			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw, (M)ove, (A)nimate > ");
 			ch = s.next().charAt(0);
 			s.nextLine();
 			switch (ch) {

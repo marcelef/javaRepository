@@ -10,7 +10,7 @@ public class Building {
 	 */
 	private int xSize;
 	private int ySize;
-	
+
 	private boolean personAtDoor;
 
 	private ArrayList<Person> persons = new ArrayList<Person>();
@@ -27,13 +27,13 @@ public class Building {
 		this.setBuilding(params);
 
 		rand = new Random();
-		
+
 		Room randRoom = this.getRandomRoom();
 
 		persons.add(new Person(randRoom.randomPosition(rand)));
-		
+
 		persons.get(0).setDoorPos(randRoom.getDoorLocation());
-		
+
 		this.personAtDoor = false;
 
 	}
@@ -85,29 +85,25 @@ public class Building {
 				}
 			}
 		}
-		
-		/* For debugging purposes
-		
-		for (int row = 0; row < xSize + 2; row++) {
-			for (int col = 0; col < ySize + 2; col++) {
-				if (row == 0 || row == xSize + 1) {
-					bi.drawing[row][col] = Character.forDigit(col -1, 13);
-				} else if (col == 0 || col == ySize + 1) {
-					bi.drawing[row][col] = Character.forDigit(row -1, 13);
-				} else {
-					bi.drawing[row][col] = ' ';
-				}
-			}
-		}
-		
-		*/
-		
+
+		/*
+		 * For debugging purposes
+		 * 
+		 * for (int row = 0; row < xSize + 2; row++) { for (int col = 0; col <
+		 * ySize + 2; col++) { if (row == 0 || row == xSize + 1) {
+		 * bi.drawing[row][col] = Character.forDigit(col -1, 13); } else if (col
+		 * == 0 || col == ySize + 1) { bi.drawing[row][col] =
+		 * Character.forDigit(row -1, 13); } else { bi.drawing[row][col] = ' ';
+		 * } } }
+		 * 
+		 */
+
 		for (Room r : this.allRooms) {
 			r.showRoom(bi);
 		}
 
 		for (Person p : this.persons) {
-			bi.drawing[(int)p.getPosition().getY()+1][(int)p.getPosition().getX()+1] = 'P';
+			bi.drawing[(int) p.getPosition().getY() + 1][(int) p.getPosition().getX() + 1] = 'P';
 		}
 	}
 
@@ -118,17 +114,18 @@ public class Building {
 	public int getYSize() {
 		return this.ySize;
 	}
-	
+
 	public void movePerson() {
 		this.personAtDoor = persons.get(0).movePerson();
 	}
-	
+
 	public boolean getPersonAtDoor() {
 		return this.personAtDoor;
 	}
 
 	/**
-	 * Converts the building's properties into one string which can be displayed.
+	 * Converts the building's properties into one string which can be
+	 * displayed.
 	 * 
 	 * @return a String object representation of the entire building.
 	 */
@@ -139,7 +136,9 @@ public class Building {
 		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";
 
 		for (Room r : allRooms) {
-			res += r.toString() + "\n"; // Gets the string representation of each room currently in the building and
+			res += r.toString() + "\n"; // Gets the string representation of
+										// each room currently in the building
+										// and
 										// appends to the return result
 		}
 
