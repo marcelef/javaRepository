@@ -13,7 +13,9 @@ public class Building {
 
 	private boolean personAtDoor;
 
-	private ArrayList<Person> persons = new ArrayList<Person>();
+	//private ArrayList<Person> persons = new ArrayList<Person>();
+	
+	private Person occupant;
 
 	private Random rand;
 
@@ -30,9 +32,13 @@ public class Building {
 
 		Room randRoom = this.getRandomRoom();
 
-		persons.add(new Person(randRoom.randomPosition(rand)));
+		//persons.add(new Person(randRoom.randomPosition(rand)));
+		
+		occupant = new Person(randRoom.randomPosition(rand));
+		
+		occupant.setDoorPos(randRoom.getDoorLocation());
 
-		persons.get(0).setDoorPos(randRoom.getDoorLocation());
+		//persons.get(0).setDoorPos(randRoom.getDoorLocation());
 
 		this.personAtDoor = false;
 
@@ -85,7 +91,7 @@ public class Building {
 				}
 			}
 		}
-
+		
 		/*
 		 * For debugging purposes
 		 * 
@@ -101,10 +107,21 @@ public class Building {
 		for (Room r : this.allRooms) {
 			r.showRoom(bi);
 		}
-
-		for (Person p : this.persons) {
-			bi.drawing[(int) p.getPosition().getY() + 1][(int) p.getPosition().getX() + 1] = 'P';
+		
+		/* Showing that the getDoorLocation(-1/1) method works
+		
+		for (Room r: allRooms) {
+			bi.drawing[(int) r.getDoorLocation(-1).getY() + 1][(int) r.getDoorLocation(-1).getX() + 1] = '-';
+			bi.drawing[(int) r.getDoorLocation(1).getY() + 1][(int) r.getDoorLocation(1).getX() + 1] = '+';
 		}
+		
+		*/
+
+//		for (Person p : this.persons) {
+//			bi.drawing[(int) p.getPosition().getY() + 1][(int) p.getPosition().getX() + 1] = 'P';
+//		}
+		
+		bi.drawing[(int) occupant.getPosition().getY() + 1][(int) occupant.getPosition().getX() + 1] = 'P';
 	}
 
 	public int getXSize() {
@@ -116,7 +133,34 @@ public class Building {
 	}
 
 	public void movePerson() {
-		this.personAtDoor = persons.get(0).movePerson();
+		this.personAtDoor = occupant.movePerson(this.allRooms.get(this.whichRoom()).getDoorLocation());
+	}
+	
+	public void movePersonBetweenRooms() {
+		Room startRoom;
+		Room destRoom;
+		
+		startRoom = this.allRooms.get(this.whichRoom());
+		do {
+			destRoom = this.getRandomRoom();
+		} while (destRoom.equals(startRoom));
+		
+		occupant.addDestination(startRoom.getDoorLocation(-1));
+		occupant.addDestination(startRoom.getDoorLocation(1));
+		occupant.addDestination(destRoom.getDoorLocation(1));
+		occupant.addDestination(destRoom.getDoorLocation(-1));
+		occupant.addDestination(destRoom.randomPosition(rand));
+		
+		occupant.movePerson();
+	}
+	
+	public int whichRoom() {
+		for (int r = 0; r < this.allRooms.size(); r++) {
+			if (this.allRooms.get(r).isInRoom(occupant.getPosition())) {
+				return r;
+			}
+		}
+		return -1;
 	}
 
 	public boolean getPersonAtDoor() {
@@ -142,8 +186,8 @@ public class Building {
 										// appends to the return result
 		}
 
-		res += "The person is located at " + (int) persons.get(0).getPosition().getX() + ","
-				+ (int) persons.get(0).getPosition().getY() + ".\n";
+		res += "The person is located at " + (int) occupant.getPosition().getX() + ","
+				+ (int) occupant.getPosition().getY() + ".\n";
 
 		return res;
 	}

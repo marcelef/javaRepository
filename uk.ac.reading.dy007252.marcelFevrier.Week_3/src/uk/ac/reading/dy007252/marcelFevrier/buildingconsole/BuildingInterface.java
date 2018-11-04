@@ -37,7 +37,7 @@ public class BuildingInterface {
 
 		char ch = ' ';
 		do {
-			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw, (M)ove, (A)nimate > ");
+			System.out.print("(N)ew buidling (I)nfo, e(X)it, (D)raw, (M)ove, (A)nimate, Move (B)etween Rooms > ");
 			ch = s.next().charAt(0);
 			s.nextLine();
 			switch (ch) {
@@ -65,6 +65,9 @@ public class BuildingInterface {
 			case 'a':
 			case 'A':
 				this.animate();
+			case 'b':
+			case 'B':
+				this.movePersonBetweenRooms();
 
 			}
 		} while (ch != 'X'); // test if end
@@ -100,6 +103,11 @@ public class BuildingInterface {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void movePersonBetweenRooms() {
+		myBuilding.movePersonBetweenRooms();
+		this.doDisplay();
 	}
 
 	/**

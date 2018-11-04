@@ -1,15 +1,19 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class Person {
 
 	private Point pos;
 	private Point doorPos;
 	
+	private ArrayList<Point> destinations;
+	
 	public Person() {
 		this.pos = new Point(0, 0);
 		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -23,6 +27,8 @@ public class Person {
 	 */
 	public Person(int x, int y) {
 		this.pos = new Point(x, y);
+		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -35,6 +41,8 @@ public class Person {
 	 */
 	public Person(Point p) {
 		this.pos = p;
+		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -70,33 +78,73 @@ public class Person {
 		this.doorPos.setLocation(x, y);
 	}
 
-	public boolean movePerson() {
+	public void movePerson() {
+
+		int dx;
+		int dy;
+		
+		for (Point dest : this.destinations) {
+			
+			dx = 0;
+			dy = 0;
+
+			while (!this.pos.equals(dest)) {
+			
+				if (this.pos.getX() > dest.getX()) {
+					dx = -1;
+				} else if (this.pos.getX() < dest.getX()) {
+					dx = 1;
+				} else
+					dx = 0;
+	
+				if (this.pos.getY() > dest.getY()) {
+					dy = -1;
+				} else if (this.pos.getY() < dest.getY()) {
+					dy = 1;
+				} else
+					dy = 0;
+	
+				this.pos.translate(dx, dy);
+				
+			}
+		}
+	}
+	
+	public boolean movePerson(Point destination) {
 
 		int dx = 0;
 		int dy = 0;
 
-		if (!this.pos.equals(this.doorPos)) {
-			if (this.pos.getX() > this.doorPos.getX()) {
+		if (!this.pos.equals(destination)) {
+			if (this.pos.getX() > destination.getX()) {
 				dx = -1;
-			} else if (this.pos.getX() < this.doorPos.getX()) {
+			} else if (this.pos.getX() < destination.getX()) {
 				dx = 1;
 			} else
 				dx = 0;
 
-			if (this.pos.getY() > this.doorPos.getY()) {
+			if (this.pos.getY() > destination.getY()) {
 				dy = -1;
-			} else if (this.pos.getY() < this.doorPos.getY()) {
+			} else if (this.pos.getY() < destination.getY()) {
 				dy = 1;
 			} else
 				dy = 0;
 
 			this.pos.translate(dx, dy);
 			
-			if (this.pos.equals(this.doorPos)) return true; else return false;
+			if (this.pos.equals(destination)) return true; else return false;
 			
 		} else {
 			return true;
 		}
+	}
+	
+	public void clearDestinations() {
+		this.destinations.clear();
+	}
+	
+	public void addDestination(Point destination) {
+		this.destinations.add(destination);
 	}
 
 }

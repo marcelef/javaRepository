@@ -148,6 +148,43 @@ public class Room {
 	public Point getDoorLocation() {
 		return this.door;
 	}
+	
+	public Point getDoorLocation(int param) {
+		
+	Point tempPoint = new Point(this.door);
+
+	if (this.door.getX() == this.corners[0].getX()) {
+		if (param == -1) {
+			tempPoint.translate(1, 0);
+		}
+		else {
+			tempPoint.translate(-1, 0);
+		}
+	} else if (this.door.getX() == this.corners[1].getX()) {
+		if (param == -1) {
+			tempPoint.translate(-1, 0);
+		} else {
+			tempPoint.translate(1, 0);
+		}
+	}
+	
+	if (this.door.getY() == this.corners[0].getY()) {
+		if (param == -1) {
+			tempPoint.translate(0, 1);
+		} else {
+			tempPoint.translate(0, -1);
+		}
+	} else if (this.door.getY() == this.corners[1].getY()) {
+		if (param == -1) {
+			tempPoint.translate(0, -1);
+		} else {
+			tempPoint.translate(0, 1);
+		}
+	}
+	
+	return tempPoint;
+	
+	}
 
 	/**
 	 * Converts the current room object into a textual representation which can be
