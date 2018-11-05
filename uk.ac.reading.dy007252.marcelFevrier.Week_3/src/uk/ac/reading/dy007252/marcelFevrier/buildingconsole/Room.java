@@ -5,6 +5,11 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+/**
+ * The class for the Room object
+ * @author fevri
+ *
+ */
 public class Room {
 	private int[] oldDoor = new int[3];
 	private int[][] oldCorners = new int[2][3];
@@ -24,30 +29,11 @@ public class Room {
 	public Room(String params) {
 		String paramArr[] = params.split(" "); // Split the parameter into separate parameters
 
-		//this.oldCorners[0][0] = Integer.parseInt(paramArr[0]); // corners[0] is the first corner, corner[0][0] is the x
-															// value for the first corner
-		//this.oldCorners[0][1] = Integer.parseInt(paramArr[1]); // corners[0][1] is the y value for the first corner
-		//this.oldCorners[0][2] = defaultSize; // PLACEHOLDER
-		
 		this.corners[0] = new Point(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
 		
-		//this.newCorners[0].setLocation(Integer.parseInt(paramArr[0]), Integer.parseInt(paramArr[1]));
-
-		//this.oldCorners[1][0] = Integer.parseInt(paramArr[2]); // corners[1] is the second corner
-		this.oldCorners[1][1] = Integer.parseInt(paramArr[3]);
-		this.oldCorners[1][2] = defaultSize; // PLACEHOLDER
-
 		this.corners[1] = new Point(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
 		
-		//this.newCorners[1].setLocation(Integer.parseInt(paramArr[2]), Integer.parseInt(paramArr[3]));
-
-		this.oldDoor[0] = Integer.parseInt(paramArr[4]);
-		this.oldDoor[1] = Integer.parseInt(paramArr[5]);
-		this.oldDoor[2] = defaultSize; // PLACEHOLDER
-		
 		this.door = new Point(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
-		
-		//this.newDoor.setLocation(Integer.parseInt(paramArr[4]), Integer.parseInt(paramArr[5]));
 		
 	}
 
@@ -71,6 +57,11 @@ public class Room {
 
 	}
 
+	/**
+	 * gets a random position within the room's walls
+	 * @param rand the random generator used to generate random x and y coordinates
+	 * @return a Point object which is the random location within the room
+	 */
 	public Point randomPosition(Random rand) {
 
 		int x;
@@ -128,57 +119,69 @@ public class Room {
 		} else
 			return false;
 	}
-
+	
+	/**
+	 * Shows the room on the building interface
+	 * @param bi the building interface that the room will be shown on
+	 */
 	public void showRoom(BuildingInterface bi) {
 		for (int row = (int)this.corners[0].getY(); row <= (int)this.corners[1].getY(); row++) {
 			for (int col = (int)this.corners[0].getX(); col <= (int)this.corners[1].getX(); col++) {
 				if (row == (int)this.corners[0].getY() || row == (int)this.corners[1].getY()) {
-					bi.drawing[row+1][col+1] = '-';
+					bi.showIt(row+1, col+1, '-');
 				}
 				else if (col == (int)this.corners[0].getX() || col == (int)this.corners[1].getX()) {
-					bi.drawing[row+1][col+1] = '|';
+					bi.showIt(row+1, col+1, '|');
 				}
 				if (row == (int)this.door.getY() && col == (int)this.door.getX()) {
-					bi.drawing[row+1][col+1] = ' ';
+					bi.showIt(row+1, col+1, ' ');
 				}
 			}
 		}
 	}
 	
+	/**
+	 * getter for the doors location for this particular room
+	 * @return the location for this room's door as a Point
+	 */
 	public Point getDoorLocation() {
 		return this.door;
 	}
 	
+	/**
+	 * Gets the Point just within or just outside this room's door depending on the given parameter
+	 * @param param the parameter which will be used to determine whether to return the Point just inside the door (-1 as param) or the Point just outside the door (1 as param)
+	 * @return the Point just inside or outside the door. The door's location is returned if any integer other than a -1 or 1 is passed as the param
+	 */
 	public Point getDoorLocation(int param) {
 		
 	Point tempPoint = new Point(this.door);
 
-	if (this.door.getX() == this.corners[0].getX()) {
-		if (param == -1) {
-			tempPoint.translate(1, 0);
+	if (this.door.getX() == this.corners[0].getX()) { // if the door is in line with the first corner's x...
+		if (param == -1) { // and we want the point just inside the door then...
+			tempPoint.translate(1, 0); // the point we want is just the door's location with its x value incremented by 1
+		} else { // if we want the location just outside the door then...
+			tempPoint.translate(-1, 0); // the point we want is the location of the door with its x decremented by 1
 		}
-		else {
-			tempPoint.translate(-1, 0);
-		}
-	} else if (this.door.getX() == this.corners[1].getX()) {
-		if (param == -1) {
-			tempPoint.translate(-1, 0);
-		} else {
-			tempPoint.translate(1, 0);
+	} else if (this.door.getX() == this.corners[1].getX()) { // if the door is in line with the second corner's x...
+		if (param == -1) { // we want the inner point
+			tempPoint.translate(-1, 0); // we want the door location with x decremented
+		} else { // we want the outer location
+			tempPoint.translate(1, 0); // we want the door's location with x incremented
 		}
 	}
 	
-	if (this.door.getY() == this.corners[0].getY()) {
-		if (param == -1) {
-			tempPoint.translate(0, 1);
-		} else {
-			tempPoint.translate(0, -1);
+	if (this.door.getY() == this.corners[0].getY()) { // if the door is in line with the first corner's y...
+		if (param == -1) { // we want the inner point
+			tempPoint.translate(0, 1); // increment door's location's y
+		} else { // we want the outer point
+			tempPoint.translate(0, -1); // decrement door's location's y
 		}
-	} else if (this.door.getY() == this.corners[1].getY()) {
-		if (param == -1) {
-			tempPoint.translate(0, -1);
-		} else {
-			tempPoint.translate(0, 1);
+	} else if (this.door.getY() == this.corners[1].getY()) { // if door in line with second corner's y...
+		if (param == -1) { // want inner point
+			tempPoint.translate(0, -1); // decrement door's location's y
+		} else { // want outer point
+			tempPoint.translate(0, 1); // increment door's location's y
 		}
 	}
 	
@@ -196,18 +199,9 @@ public class Room {
 	public String toString() {
 		String res = "";
 
-		res += "Corner at " + oldCorners[0][0] + "," + oldCorners[0][1] + " with size " + oldCorners[0][2] + "\n";
-		res += "Corner at " + oldCorners[1][0] + "," + oldCorners[1][1] + " with size " + oldCorners[1][2] + "\n";
-		
-		res += "\n\nTesting New Corners\n\n";
-		
 		res += "Corner at " + (int)this.corners[0].getX() + "," + (int)this.corners[0].getY() + " with size " + this.defaultSize + "\n";
 		res += "Corner at " + (int)this.corners[1].getX() + "," + (int)this.corners[1].getY() + " with size " + this.defaultSize + "\n";
 
-		res += "\nDoor is at " + oldDoor[0] + "," + oldDoor[1] + " with size " + oldDoor[2] + "\n";
-		
-		res += "\n\nTesting new door\n\n";
-		
 		res += "Door is at " + (int)this.door.getX() + "," + (int)this.door.getY() + " with size " + this.defaultSize + "\n";
 
 
