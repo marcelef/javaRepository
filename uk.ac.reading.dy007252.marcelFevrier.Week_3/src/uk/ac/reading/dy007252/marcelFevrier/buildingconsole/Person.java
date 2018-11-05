@@ -202,5 +202,14 @@ public class Person {
 	public void addDestination(Point destination) {
 		this.destinations.add(destination);
 	}
+	
+	public String toString() {
+		
+		String res = "";
+		
+		res += "The person is located at (" + (int)this.pos.getX() + "," + (int)this.pos.getY() + ")\n";
+		
+		return res;
+	}
 
 }

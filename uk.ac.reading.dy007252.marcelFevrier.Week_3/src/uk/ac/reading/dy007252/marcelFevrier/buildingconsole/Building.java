@@ -170,8 +170,8 @@ public class Building {
 	 * is currently within
 	 */
 	public void movePerson() {
-		this.occupant.setDoorPos(this.allRooms.get(this.whichRoom()).getDoorLocation());
-		this.personAtDoor = occupant.movePerson(this.allRooms.get(this.whichRoom()).getDoorLocation());
+		this.occupant.setDoorPos(this.allRooms.get(this.getOccupantRoom()).getDoorLocation());
+		this.personAtDoor = occupant.movePerson(this.allRooms.get(this.getOccupantRoom()).getDoorLocation());
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class Building {
 		Room startRoom; // the room the occupant is currently inside of
 		Room destRoom; // the random destination room the person will go to
 
-		startRoom = this.allRooms.get(this.whichRoom()); // get the room the occupant is currently in
+		startRoom = this.allRooms.get(this.getOccupantRoom()); // get the room the occupant is currently in
 		do {
 			destRoom = this.getRandomRoom(); // get a random room for the destination room...
 		} while (destRoom.equals(startRoom)); // ...while the destination room is not the same as the current room
@@ -210,7 +210,7 @@ public class Building {
 	 * @return the index (referencing allRooms) of the room the occupant is
 	 *         currently within
 	 */
-	public int whichRoom() {
+	public int getOccupantRoom() {
 		for (int r = 0; r < this.allRooms.size(); r++) { // for every room (index)...
 			if (this.allRooms.get(r).isInRoom(occupant.getPosition())) { // if the occupant's position is within the
 																			// room...
@@ -221,7 +221,7 @@ public class Building {
 	}
 
 	public boolean getPersonAtDoor() {
-		if (this.occupant.getPosition().equals(this.allRooms.get(this.whichRoom()).getDoorLocation())) this.personAtDoor = true; else this.personAtDoor = false;
+		if (this.occupant.getPosition().equals(this.allRooms.get(this.getOccupantRoom()).getDoorLocation())) this.personAtDoor = true; else this.personAtDoor = false;
 		return this.personAtDoor;
 	}
 
@@ -237,14 +237,15 @@ public class Building {
 		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";
 
 		for (Room r : allRooms) {
+			res += "Room:\n\n";
+			
 			res += r.toString() + "\n"; // Gets the string representation of
 										// each room currently in the building
 										// and
 										// appends to the return result
 		}
 
-		res += "The person is located at " + (int) occupant.getPosition().getX() + ","
-				+ (int) occupant.getPosition().getY() + ".\n";
+		res += "Person:\n\n" + this.occupant.toString();
 
 		return res;
 	}

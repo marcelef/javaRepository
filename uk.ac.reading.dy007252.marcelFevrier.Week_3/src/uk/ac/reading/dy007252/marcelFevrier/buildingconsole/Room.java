@@ -199,10 +199,10 @@ public class Room {
 	public String toString() {
 		String res = "";
 
-		res += "Corner at " + (int)this.corners[0].getX() + "," + (int)this.corners[0].getY() + " with size " + this.defaultSize + "\n";
-		res += "Corner at " + (int)this.corners[1].getX() + "," + (int)this.corners[1].getY() + " with size " + this.defaultSize + "\n";
+		res += "Corner at (" + (int)this.corners[0].getX() + "," + (int)this.corners[0].getY() + ") with size " + this.defaultSize + "\n";
+		res += "Corner at (" + (int)this.corners[1].getX() + "," + (int)this.corners[1].getY() + ") with size " + this.defaultSize + "\n";
 
-		res += "Door is at " + (int)this.door.getX() + "," + (int)this.door.getY() + " with size " + this.defaultSize + "\n";
+		res += "Door is at (" + (int)this.door.getX() + "," + (int)this.door.getY() + ") with size " + this.defaultSize + "\n";
 
 
 		return res;
