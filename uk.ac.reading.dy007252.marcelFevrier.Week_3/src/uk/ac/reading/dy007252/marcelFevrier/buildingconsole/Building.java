@@ -201,7 +201,7 @@ public class Building {
 		occupant.addDestination(destRoom.randomPosition(rand)); // add to the occupant's list of destinations a random
 																// position within the destination room
 
-		occupant.movePerson(); // move the person after the list of destination's has been set
+		occupant.movePersonBetweenRooms(); // move the person after the list of destination's has been set
 	}
 
 	/**
