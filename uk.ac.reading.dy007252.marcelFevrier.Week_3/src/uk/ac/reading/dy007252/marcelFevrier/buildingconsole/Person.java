@@ -1,15 +1,24 @@
 package uk.ac.reading.dy007252.marcelFevrier.buildingconsole;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
+/**
+ * The Person class is used to create a Person object which will be used as an occupant of the building
+ * @author fevri
+ *
+ */
 public class Person {
 
 	private Point pos;
 	private Point doorPos;
-	
+
+	private ArrayList<Point> destinations;
+
 	public Person() {
 		this.pos = new Point(0, 0);
 		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -23,6 +32,8 @@ public class Person {
 	 */
 	public Person(int x, int y) {
 		this.pos = new Point(x, y);
+		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -35,6 +46,8 @@ public class Person {
 	 */
 	public Person(Point p) {
 		this.pos = p;
+		this.doorPos = new Point(0, 0);
+		this.destinations = new ArrayList<Point>();
 	}
 
 	/**
@@ -58,45 +71,116 @@ public class Person {
 		return pos;
 	}
 
+	/**
+	 * Shows the person's location on the building interface
+	 * 
+	 * @param bi
+	 *            the building interface on which the person's location will be
+	 *            shown
+	 */
 	public void showPerson(BuildingInterface bi) {
-
+		bi.showIt((int) this.pos.getY() + 1, (int) this.pos.getX() + 1, 'P');
 	}
 
+	/**
+	 * Setter for the location of the door of the person's current room
+	 * 
+	 * @param p
+	 *            the Point location of the door
+	 */
 	public void setDoorPos(Point p) {
 		this.doorPos = p;
 	}
 
+	/**
+	 * Setter for the location of the door of the person's current room
+	 * 
+	 * @param x
+	 *            the x coordinate for the door's location
+	 * @param y
+	 *            the y location for the door's location
+	 */
 	public void setDoorPos(int x, int y) {
 		this.doorPos.setLocation(x, y);
 	}
 
-	public boolean movePerson() {
+	/**
+	 * Moves the person using the given list of destinations
+	 */
+	public void movePersonBetweenRooms() {
 
-		int dx = 0;
-		int dy = 0;
+		for (Point dest : this.destinations) { // for every destination Point in the list of destinations
 
-		if (!this.pos.equals(this.doorPos)) {
-			if (this.pos.getX() > this.doorPos.getX()) {
-				dx = -1;
-			} else if (this.pos.getX() < this.doorPos.getX()) {
-				dx = 1;
-			} else
-				dx = 0;
+			while (!this.pos.equals(dest)) { // while the person's position is not equal to the location of the current
+												// destination...
+				this.movePerson(dest);
+			}
+		}
+	}
 
-			if (this.pos.getY() > this.doorPos.getY()) {
+	/**
+	 * Moves the person to a given destination rather than to a list of destinations
+	 * @param destination the destination where the person will move toward one step at a time
+	 * @return a boolean showing if the person is at the location of the door or not
+	 */
+	public boolean movePerson(Point destination) {
+
+		int dx = 0; // the amount that we will translate in the x direction
+		int dy = 0; // the amount that we will translate in the y direction
+
+		if (!this.pos.equals(destination)) { // if the person is not already at the destination
+			if (this.pos.getX() > destination.getX()) { // if the person's x is GREATER than that of the destination then we want to move the person's x closer to the x of the destination...
+				dx = -1; // so we have to decrease the person's x to get the person's x closer to the destination's x
+			} else if (this.pos.getX() < destination.getX()) { // otherwise if the person's x is LESS than that of the destination then to get closer we must move the person closer by...
+				dx = 1; // increasing the person's x as it will bring the person's x 1 step closer to the destination
+			} else // if the person's x is NOT greater or less than (so the SAME as) the destination's x then we do want to move the person's x location so...
+				dx = 0; // we do nothing
+
+			if (this.pos.getY() > destination.getY()) {  // same as above for the y location of the person
 				dy = -1;
-			} else if (this.pos.getY() < this.doorPos.getY()) {
+			} else if (this.pos.getY() < destination.getY()) {
 				dy = 1;
 			} else
 				dy = 0;
 
-			this.pos.translate(dx, dy);
-			
-			if (this.pos.equals(this.doorPos)) return true; else return false;
-			
+			this.pos.translate(dx, dy); // now we know where to move the person so move them. If we moved closer to
+										// the destination but still aren't at the
+										// destination (since we are taking one step at a time) then the while loop
+										// will loop again and again until we are at the destination,
+										// then the person will move on to the next destination in the for loop
+
+			if (this.pos.equals(destination)) // if the person is now at the destination then return true otherwise return false
+				return true;
+			else
+				return false;
+
 		} else {
-			return true;
+			return true; // if the person was already at the destination then return true
 		}
+	}
+
+	/**
+	 * Clears the current list of destinations for the person
+	 */
+	public void clearDestinations() {
+		this.destinations.clear();
+	}
+
+	/**
+	 * Adds a destination to the list of destinations for the person
+	 * @param destination the destination to add to the list of destinations as a Point
+	 */
+	public void addDestination(Point destination) {
+		this.destinations.add(destination);
+	}
+	
+	public String toString() {
+		
+		String res = "";
+		
+		res += "The person is located at (" + (int)this.pos.getX() + "," + (int)this.pos.getY() + ")\n";
+		
+		return res;
 	}
 
 }
