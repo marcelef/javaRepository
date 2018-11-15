@@ -73,7 +73,7 @@ public class Building {
 	 * 
 	 * @return The index of a randomly selected room within the building.
 	 */
-	public Room getRandomRoom() {
+	private Room getRandomRoom() {
 		int randRoom = this.rand.nextInt(this.allRooms.size()); // gets a random room from allRooms
 		return this.allRooms.get(randRoom); // returns the actual randomly selected room
 	}
