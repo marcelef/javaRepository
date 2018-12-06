@@ -11,8 +11,6 @@ import javax.swing.JOptionPane;
  *
  */
 public class Room {
-	private int[] oldDoor = new int[3];
-	private int[][] oldCorners = new int[2][3];
 	private int defaultSize = 1;
 
 	private Point[] corners = new Point[2];
