@@ -11,12 +11,11 @@ public class ImageObject extends SquareObject {
 	public ImageObject(Point p) {
 		super(p);
 		this.size = 1;
-		this.setWidth(image.getWidth());
-		this.setHeight(image.getHeight());
 	}
 	
 	public ImageObject(int x, int y) {
 		super(new Point(x,y));
+		this.size = 1;
 	}
 	
 	public void setImage(String path) {

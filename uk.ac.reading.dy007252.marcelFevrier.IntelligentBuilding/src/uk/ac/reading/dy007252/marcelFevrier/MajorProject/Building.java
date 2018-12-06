@@ -43,7 +43,7 @@ public class Building {
 
 		this.personAtDoor = false;
 		
-		objects.add(new RoundTable(50,50));
+		objects.add(new RoundTable(50,40));
 		objects.get(0).setColour('g');
 
 		objects.add(new SquareObject(80, 100));
@@ -60,7 +60,8 @@ public class Building {
 		objects.get(3).setColour('o');
 		objects.get(3).setSize(20);
 		
-		objects.add(new ImageObject(200,100));
+		objects.add(new ImageObject(330,120));
+		objects.get(4).setSize(4);
 	}
 
 	/**
@@ -120,71 +121,6 @@ public class Building {
 	}
 
 	/**
-	 * Imprints the layout (including the outline of the building, the outline of
-	 * the rooms, and the occupant's location) of the building on the building
-	 * interface's display layout
-	 * 
-	 * @param bi
-	 *            the building interface that the layout will be shown on
-	 */
-	/*
-	public void PREVIOUSSHOWBUILDING(BuildingGui bi) {
-
-		for (int row = 0; row < this.ySize + 2; row++) { // for every row from row 0 to row building size + 2 (the + 2
-															// because we need to display walls at the start and end of
-															// the building)
-			for (int col = 0; col < this.xsSize + 2; col++) { // for every column from column 0 to column building size +
-																// 2 (the + 2 same as above)
-				if ((row == 0 || row == this.ySize + 1) || (col == 0 || col == this.xSize + 1)) { // if the row is the
-																									// first or last row
-																									// OR the column is
-																									// the first or last
-																									// column THEN there
-																									// must be a wall
-					bi.showIt(row, col, '#'); // display the wall on the building interface
-				} else { // if it isn't first or last row or column then it isn't a wall and is therefore
-							// a space (' ')
-					bi.showIt(row, col, ' '); // display a space on the building interface
-				}
-			}
-		}
-		
-
-		/*
-		 * For debugging purposes
-		 * 
-		 * for (int row = 0; row < xSize + 2; row++) { for (int col = 0; col < ySize +
-		 * 2; col++) { if (row == 0 || row == xSize + 1) { bi.drawing[row][col] =
-		 * Character.forDigit(col -1, 13); } else if (col == 0 || col == ySize + 1) {
-		 * bi.drawing[row][col] = Character.forDigit(row -1, 13); } else {
-		 * bi.drawing[row][col] = ' '; } } }
-		 * 
-		 */
-/*
-		for (Room r : this.allRooms) { // then for every room in the building
-			r.showRoom(bi); // show the room on the building interface
-		}
-*/
-		/*
-		 * Showing that the getDoorLocation(-1/1) method works
-		 * 
-		 * for (Room r: allRooms) { bi.drawing[(int) r.getDoorLocation(-1).getY() +
-		 * 1][(int) r.getDoorLocation(-1).getX() + 1] = '-'; bi.drawing[(int)
-		 * r.getDoorLocation(1).getY() + 1][(int) r.getDoorLocation(1).getX() + 1] =
-		 * '+'; }
-		 * 
-		 */
-	/*
-		// for (Person p : this.persons) {
-		// bi.drawing[(int) p.getPosition().getY() + 1][(int) p.getPosition().getX() +
-		// 1] = 'P';
-		// }
-
-		occupant.showPerson(bi); // lastly show the occupant on the building interface
-	}
-	*/
-
-	/**
 	 * Getter for the x size of the building
 	 * 
 	 * @return the x size of the building as a integer
@@ -201,17 +137,6 @@ public class Building {
 	public int getYSize() {
 		return this.ySize;
 	}
-
-	/**
-	 * moves the occupant one step closer to the door of the room that the occupant
-	 * is currently within
-	 */
-	/*
-	public void movePerson() {
-		this.occupant.setDoorPos(this.allRooms.get(this.getOccupantRoom(this.occupant)).getDoorLocation());
-		this.personAtDoor = occupant.movePerson(this.allRooms.get(this.getOccupantRoom(occupant)).getDoorLocation());
-	}
-	*/
 
 	/**
 	 * moves the person from the room the occupant is currently within to a random
@@ -298,7 +223,13 @@ public class Building {
 		res += "Person:\n" + this.occupant.toString();
 
 		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";
-
+		
+		for (RoomObject object : this.objects) {
+			res += object.toString();
+		}
+		
+		res += "\n";
+		
 		for (Room r : allRooms) {
 			res += "Room:\n";
 			

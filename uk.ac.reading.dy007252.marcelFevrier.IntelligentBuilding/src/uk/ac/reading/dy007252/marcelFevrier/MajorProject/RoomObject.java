@@ -6,11 +6,12 @@ public abstract class RoomObject {
 	protected Point position;
 	protected double size;
 	protected char colour;
-	private static int id;
+	private int id;
+	private static int contId;
 	
 	public RoomObject(Point p){
 		this.position = p;
-		this.id += 1;
+		this.id = 1 + this.contId++;
 	}
 	
 	public Point getPosition() {
@@ -52,7 +53,7 @@ public abstract class RoomObject {
 	public String toString() {
 		String res = "";
 		
-		// add toString()
+		res += "Object at (" + this.getX() + ", " + this.getY() + ") with ID: " + this.getID() + "\n";
 		
 		return res;
 	}
