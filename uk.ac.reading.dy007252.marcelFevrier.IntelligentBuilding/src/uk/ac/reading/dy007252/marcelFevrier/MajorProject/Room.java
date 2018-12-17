@@ -81,6 +81,21 @@ public class Room {
 
 		return new Point(x, y);
 	}
+	
+	public boolean isInWall(Point p) {
+		
+		if (isBetween((int) corners[0].getX(), (int) corners[1].getX(), (int) p.getX()) 
+				&& (p.getY() == corners[0].getY() || p.getY() == corners[1].getY())) {
+			return true;
+		}
+		
+		if (isBetween((int) corners[0].getY(), (int)corners[1].getY(), (int) p.getY())
+				&& (p.getX() == corners[0].getX() || p.getX() == corners[1].getX())) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Determines whether a particular point lays between two given boundary points.
