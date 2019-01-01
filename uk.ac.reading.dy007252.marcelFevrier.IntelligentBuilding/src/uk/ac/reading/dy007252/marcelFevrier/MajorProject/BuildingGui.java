@@ -209,7 +209,7 @@ public class BuildingGui extends Application {
     	gc = canvas.getGraphicsContext2D();
     	
     	timer = new AnimationTimer() {
-    		public void handle(long cuurentNanoTime) {
+    		public void handle(long curentNanoTime) {
     			primaryBuilding.update();
     			drawBuilding();
     		}

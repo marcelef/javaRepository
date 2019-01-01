@@ -1,5 +1,6 @@
 package uk.ac.reading.dy007252.marcelFevrier.MajorProject;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -165,7 +166,7 @@ public class Building {
 		occupant.addDestination(destRoom.randomPosition(rand)); // add to the occupant's list of destinations a random
 																// position within the destination room
 
-		occupant.move(); // move the person after the list of destination's has been set
+		//occupant.move(); // move the person after the list of destination's has been set
 	}
 
 	/**
@@ -191,6 +192,8 @@ public class Building {
 		
 		this.occupant.clearPath();
 		this.occupant.setStopped(false);
+		this.occupant.setPosition(60, 200);
+		//this.occupant.addDestination(this.allRooms.get(1).getDoorLocation());
 		this.occupant.addDestination(this.allRooms.get(getOccupantRoom(occupant)).getDoorLocation(-1));
 		this.occupant.addDestination(this.allRooms.get(getOccupantRoom(occupant)).getDoorLocation(1));
 		this.occupant.addDestination(this.allRooms.get(dRoom).getDoorLocation(1));
@@ -207,8 +210,23 @@ public class Building {
 		if (this.occupant.getStopped()) {
 			this.setNewRoom(this.occupant);
 		} else {
-			this.occupant.move();
+			this.occupant.move(this);
 		}
+	}
+	
+	public boolean isInWall(int x, int y) {
+		for (Room r : this.allRooms) {
+			
+			if (r.isInWall(x, y)) {
+				
+				System.out.println("IN WALL");
+				
+				return true;
+			}
+
+		}
+		
+		return false;
 	}
 
 	/**

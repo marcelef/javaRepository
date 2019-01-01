@@ -82,17 +82,30 @@ public class Room {
 		return new Point(x, y);
 	}
 	
-	public boolean isInWall(Point p) {
+	public boolean isInWall(int x, int y) {
 		
-		if (isBetween((int) corners[0].getX(), (int) corners[1].getX(), (int) p.getX()) 
-				&& (p.getY() == corners[0].getY() || p.getY() == corners[1].getY())) {
+		if (isInRoom(x,y)) {
+			if (y == corners[0].getY() || y == corners[1].getY() || x == corners[0].getX() || x == corners[1].getX()) {
+				if (!isAtDoor(x,y)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean isAtDoor(int x, int y) {
+		if (x > (this.door.getX() - this.doorSize/2) && x < (this.door.getX() + this.doorSize/2)) { // AT THE MOMENT THIS > IS NOT A >= WHICH ALLOWS THE PERSON TO MOVE AROUND THE WALL
 			return true;
 		}
 		
-		if (isBetween((int) corners[0].getY(), (int)corners[1].getY(), (int) p.getY())
-				&& (p.getX() == corners[0].getX() || p.getX() == corners[1].getX())) {
-			return true;
-		}
+		return false;
+	}
+	
+	public boolean isInRoom(int x, int y) {
+		if (isBetween((int) corners[0].getX(), (int) corners[1].getX(), x)
+				&& isBetween((int) corners[0].getY(), (int) corners[1].getY(), y)) return true;
 		
 		return false;
 	}
