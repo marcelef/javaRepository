@@ -43,6 +43,7 @@ public class BuildingGUI extends Application {
 	 * @param args
 	 */
 	private Stage stagePrimary;
+	private Stage clickSettingsStage;
 	
 	private Building theBuilding;		// set up the building
 	private VBox rtPane;										// vertical box for putting info

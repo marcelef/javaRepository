@@ -17,6 +17,13 @@ public class Person {
 		this.size = 4;
 	}
 	
+	Person(int x, int y) {
+		this.position = new Point(x, y);
+		this.path = new ArrayList<Point>();
+		this.hasStopped = true;
+		this.size = 4;
+	}
+	
 	public Point getPosition() {
 		return this.position;
 	}
@@ -54,7 +61,7 @@ public class Person {
 	}
 	
 	public String toString() {
-		return "Person is at " + (int) this.position.getX() + ", " + (int) this.position.getY() + "\n";
+		return "Person is at " + (int) this.position.getX() + ", " + (int) this.position.getY();
 	}
 	
 	public void clearPath() {
@@ -77,11 +84,11 @@ public class Person {
 		int dx = 0;
 		int dy = 0;
 		
-		if (this.position.getX() < d.getX() && !b.isInWall(this.getX() + 1, this.getY())) dx = 1;
-		else if (this.position.getX() > d.getX() && !b.isInWall(this.getX() - 1, this.getY())) dx = -1;
+		if (this.position.getX() < d.getX() && !b.checkCanMove(this.getX() + 1, this.getY())) dx = 1;
+		else if (this.position.getX() > d.getX() && !b.checkCanMove(this.getX() - 1, this.getY())) dx = -1;
 		
-		if (this.position.getY() < d.getY() && !b.isInWall(this.getX(), this.getY() + 1)) dy = 1;
-		else if (this.position.getY() > d.getY() && !b.isInWall(this.getX() + 1, this.getY() - 1)) dy = -1;
+		if (this.position.getY() < d.getY() && !b.checkCanMove(this.getX(), this.getY() + 1)) dy = 1;
+		else if (this.position.getY() > d.getY() && !b.checkCanMove(this.getX() + 1, this.getY() - 1)) dy = -1;
 		
 		this.position.translate(dx, dy);
 	}
@@ -92,6 +99,10 @@ public class Person {
 	
 	public Point getNextInPath() {
 		return this.path.get(0);
+	}
+	
+	public Point getDestination() {
+		return this.path.get(this.path.size()-1);
 	}
 	
 	private boolean reachedDestination() {

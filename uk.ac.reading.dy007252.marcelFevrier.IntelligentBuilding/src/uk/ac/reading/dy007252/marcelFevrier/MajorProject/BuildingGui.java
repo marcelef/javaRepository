@@ -2,8 +2,13 @@ package uk.ac.reading.dy007252.marcelFevrier.MajorProject;
 
 
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,12 +19,22 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,10 +47,13 @@ public class BuildingGui extends Application {
 	
 	private Building primaryBuilding;
 	private VBox rightPane;
+	private ScrollPane rightScrollPane;
 	private GraphicsContext gc;
 	private AnimationTimer timer;
 	private int whichBuilding;
-
+	
+	private double contextMenuX;
+	private double contextMenuY;
 	
 	public void showItem(int x, int y, int size, char colour) {
 		gc.setFill(colFromChar(colour));
@@ -120,6 +138,211 @@ public class BuildingGui extends Application {
 		return ans;
 	}
 	
+	private char charFromCol(String s) {
+		switch (s.toUpperCase()) {
+		case "BLACK":
+			return 'k';
+		case "BLUE":
+			return 'b';
+		case "CYAN":
+			return 'c';
+		case "GREEN":
+			return 'g';
+		case "RED":
+			return 'r';
+		case "PINK":
+			return 'p';
+		case "ORANGE":
+			return 'o';
+		case "WHITE":
+			return 'w';
+		case "YELLOW":
+			return 'y';
+		}
+		return 'k';
+	}
+	
+	private DialogCapture getSizeAndColourValues() {
+		DialogCapture capture = new DialogCapture();
+		
+		Dialog<DialogCapture> dialog = new Dialog<DialogCapture>();
+		dialog.setTitle("Add New Round Table");
+		dialog.setHeaderText("Enter the size and colour of the new table.");
+		dialog.setWidth(100);
+		dialog.setHeight(500);
+		dialog.setResizable(true);
+		
+		Label sizeLbl = new Label("Size");
+		Label colourLbl = new Label("Colour");
+		TextField sizeTxt = new TextField();
+		
+		ComboBox<String> coloursList = new ComboBox<String>();
+		coloursList.getItems().addAll(
+				"Black",
+				"Blue",
+				"Cyan",
+				"Green",
+				"Red",
+				"Pink",
+				"Orange",
+				"White",
+				"Yellow");
+		
+		GridPane grid = new GridPane();
+		
+		grid.add(sizeLbl, 1, 1);
+		grid.add(sizeTxt, 2, 1);
+		grid.add(colourLbl, 1, 2);
+		grid.add(coloursList, 2, 2);
+		
+		
+		ButtonType doneBtn = new ButtonType("Done", ButtonData.OK_DONE);
+		
+		dialog.setResultConverter(dialogButton -> {
+		    if (dialogButton == doneBtn) {
+		        capture.add(sizeTxt.getText());
+		        capture.add(Character.toString(charFromCol(coloursList.getValue())));
+		        return capture;
+		    }
+		    return null;
+		});
+		
+		dialog.getDialogPane().getButtonTypes().addAll(doneBtn, ButtonType.CANCEL);
+		dialog.getDialogPane().setContent(grid);
+		Optional<DialogCapture> result = dialog.showAndWait();
+		
+		return result.get();
+	}
+	
+	private void addNewPerson(double x, double y) {
+		primaryBuilding.addNewPerson(this, (int) x, (int) y);
+	}
+	
+	private void addNewPersonRandom() {
+		primaryBuilding.addNewPerson(this);
+	}
+	
+	private void addNewRoundObject(double x, double y) {
+		DialogCapture capture = getSizeAndColourValues();
+		primaryBuilding.createNewRoundTable(this, (int) x, (int) y, Double.parseDouble(capture.get(0)), capture.get(1).charAt(0));
+	}
+	
+	private void removeAllOccupants() {
+		primaryBuilding.removeAllOccupants(this);
+	}
+	
+	private String defineNewBuilding() {
+		String res = "";
+		DialogCapture capture = new DialogCapture();
+		
+		Dialog<DialogCapture> dialog = new Dialog<DialogCapture>();
+		dialog.setHeaderText("Enter the definitions for the new building");
+		
+		Label widthLbl = new Label("Width: ");
+		Label heightLbl = new Label("Height: ");
+		Label RoomLbl = new Label("Rooms");
+		Label firstCornerXLbl = new Label("Corner 1 x: ");
+		Label firstCornerYLbl = new Label("Corner 1 y: ");
+		Label secondCornerXLbl = new Label("Corner 2 x: ");
+		Label secondCornerYLbl = new Label("Corner 2 y: ");
+		Label doorXLbl = new Label("Door x: ");
+		Label doorYLbl = new Label("Door y: ");
+		Label doorSizeLbl = new Label("Door Size: ");
+		
+		TextField widthTxt = new TextField("");
+		TextField heightTxt = new TextField(""); 
+		TextField firstCornerXTxt = new TextField("");
+		TextField firstCornerYTxt = new TextField("");
+		TextField secondCornerXTxt = new TextField("");
+		TextField secondCornerYTxt = new TextField("");
+		TextField doorXTxt = new TextField("");
+		TextField doorYTxt = new TextField("");
+		TextField doorSizeTxt = new TextField("");
+		
+		GridPane grid = new GridPane();
+		
+		grid.add(widthLbl, 1, 1);
+		grid.add(widthTxt, 2, 1);
+		
+		grid.add(heightLbl, 1, 2);
+		grid.add(heightTxt, 2, 2);
+		
+		grid.add(RoomLbl, 1, 3);
+		
+		grid.add(firstCornerXLbl, 1, 4);
+		grid.add(firstCornerXTxt, 2, 4);
+		
+		grid.add(firstCornerYLbl, 1, 5);
+		grid.add(firstCornerYTxt, 2, 5);
+		
+		grid.add(secondCornerXLbl, 1, 6);
+		grid.add(secondCornerXTxt, 2, 6);
+		
+		grid.add(secondCornerYLbl, 1, 7);
+		grid.add(secondCornerYTxt, 2, 7);
+		
+		grid.add(doorXLbl, 1, 8);
+		grid.add(doorXTxt, 2, 8);
+		
+		grid.add(doorYLbl, 1, 9);
+		grid.add(doorYTxt, 2, 9);
+
+		grid.add(doorSizeLbl, 1, 10);
+		grid.add(doorSizeTxt, 2, 10);
+		
+		ButtonType doneBtn = new ButtonType("Done", ButtonData.OK_DONE);
+		
+		Button addRoomBtn = new Button("Add Room");
+		addRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+		        capture.add(firstCornerXTxt.getText());
+		        capture.add(firstCornerYTxt.getText());
+		        capture.add(secondCornerXTxt.getText());
+		        capture.add(secondCornerYTxt.getText());
+		        capture.add(doorXTxt.getText());
+		        capture.add(doorYTxt.getText());
+		        capture.add(doorSizeTxt.getText());
+		        
+		        firstCornerXTxt.clear();
+		        firstCornerYTxt.clear();
+		        secondCornerXTxt.clear();
+		        secondCornerYTxt.clear();
+		        doorXTxt.clear();
+		        doorYTxt.clear();
+		        doorSizeTxt.clear();
+			}
+		});
+		
+		grid.add(addRoomBtn, 2, 11);
+		
+		dialog.getDialogPane().getButtonTypes().addAll(doneBtn, ButtonType.CANCEL);
+		dialog.getDialogPane().setContent(grid);
+		
+		dialog.setResultConverter(dialogButton -> {
+		    if (dialogButton == doneBtn) {
+		        capture.addAt(0, widthTxt.getText());
+		        capture.addAt(1, heightTxt.getText());
+		        return capture;
+		    }
+		    return null;
+		});
+		
+		
+		Optional<DialogCapture> result = dialog.showAndWait();
+		
+		res = result.get().covertToBuilding();
+		
+		res += "";
+		
+		return res;
+	}
+	
+	private void clearCanvas() {
+		gc.setFill(Color.BEIGE);
+	 	gc.fillRect(0,  0,  500,  500);
+	}
+	
 	/**
      * return as String definition of bOpt'th building
      * @param bOpt
@@ -153,21 +376,55 @@ public class BuildingGui extends Application {
     	MenuItem helpAbout = new MenuItem("About");
     	// implement the about part
     	
-    	menuBar.getMenus().addAll(fileMenu, helpMenu);
+    	Menu addMenu = new Menu("Add");
+    	
+    	MenuItem addPerson = new MenuItem("Add Random Person");
+    	addPerson.setOnAction(new EventHandler<ActionEvent>() {
+    		@Override
+    		public void handle(ActionEvent event) {
+    			addNewPersonRandom();
+    		}
+    	});
+    	
+    	addMenu.getItems().add(addPerson);
+    	
+    	Menu removeMenu = new Menu("Remove");
+    	
+    	MenuItem removeAllOccupants = new MenuItem("Remove All Occupants");
+    	removeAllOccupants.setOnAction(new EventHandler<ActionEvent>() {
+    		@Override
+    		public void handle(ActionEvent event) {
+    			removeAllOccupants();
+    		}
+    	});
+    	
+    	removeMenu.getItems().addAll(removeAllOccupants);
+    	
+    	menuBar.getMenus().addAll(fileMenu, helpMenu, addMenu, removeMenu);
     	
     	return menuBar;
     }
     
     private HBox setButtons() {
     	
-    	Button btnNewBuild = new Button("New Building");
-		btnNewBuild.setOnAction(new EventHandler<ActionEvent>() {
+    	Button btnSwapBuild = new Button("Swap Building");
+		btnSwapBuild.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
 	        		primaryBuilding = new Building(buildingString());
 		        	drawBuilding();								// then redraw arena
 		       }
 		    });
+		
+		Button btnCreateNewBuild = new Button("Create New Building");
+		btnCreateNewBuild.setOnAction(new EventHandler<ActionEvent> () {
+			@Override
+			public void handle(ActionEvent event) {
+				primaryBuilding = new Building(defineNewBuilding());
+				clearCanvas();
+				drawBuilding();
+			}
+		});
 	    
 	    Button btnStart = new Button("Start");
 	    btnStart.setOnAction(new EventHandler<ActionEvent>() {
@@ -186,7 +443,7 @@ public class BuildingGui extends Application {
 	    });
 
 	    	// now add these buttons + labels to a HBox
-	    HBox hbox = new HBox(new Label("Config: "), btnNewBuild, 
+	    HBox hbox = new HBox(new Label("Config: "), btnSwapBuild, btnCreateNewBuild, 
 	    		             new Label("Run: "), btnStart, btnStop);
 	    return hbox;
     }
@@ -216,13 +473,58 @@ public class BuildingGui extends Application {
     	};
     	
     	rightPane = new VBox();												// set vBox on right to list items
+    	rightScrollPane = new ScrollPane();
+    	rightScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		rightPane.setAlignment(Pos.TOP_LEFT);
 		rightPane.setPadding(new Insets(5, 75, 75, 5));
- 		bp.setRight(rightPane);
+		rightScrollPane.setContent(rightPane);
+ 		bp.setRight(rightScrollPane);
 		  
 	    bp.setBottom(setButtons());											// set bottom pane with buttons
+	    
+	    // CONTEXT MENU
+	    
+	    ContextMenu contextMenu = new ContextMenu();
+	    
+        MenuItem addPersonItem = new MenuItem("Add Person");
+        addPersonItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                addNewPerson(contextMenuX, contextMenuY);
+            }
+        });
+        
+        MenuItem addRoundTableItem = new MenuItem("Add Round Table");
+        addRoundTableItem.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event) {
+        		addNewRoundObject(contextMenuX, contextMenuY);
+        	}
+        });
+        
+        MenuItem closeContextMenuItem = new MenuItem("Cancel");
+        closeContextMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				contextMenu.hide();
+			}
+        });
+ 
+        // Add MenuItem to ContextMenu
+        contextMenu.getItems().addAll(addPersonItem, addRoundTableItem, closeContextMenuItem);
+        
+        canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent event) {
+            	contextMenuX = event.getX();
+            	contextMenuY = event.getY();
+            	contextMenu.show(canvas, event.getScreenX(), event.getScreenY());
+            }
+        });
+	    
+	    
 
-	    Scene scene = new Scene(bp, 800, 600);								// set overall scene
+	    Scene scene = new Scene(bp, 900, 600);								// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());
         bp.prefWidthProperty().bind(scene.widthProperty());
 

@@ -21,6 +21,10 @@ public class Building {
 	private boolean personAtDoor; // tracks if the person is at the door or not
 
 	private Person occupant; // the occupant of the building
+	
+	private Person otherOccupant;
+	
+	private ArrayList<Person> occupants;
 
 	private Random rand; // a random generator object
 
@@ -37,12 +41,27 @@ public class Building {
 
 		rand = new Random();
 
-		Room randRoom = this.getRandomRoom(); // random room to add the occupant to
-
-		occupant = new Person(randRoom.randomPosition(rand)); // creating the occupant and adding the occupant to the
-																// random room
-
-		this.personAtDoor = false;
+//		Room randRoom = this.getRandomRoom(); // random room to add the occupant to
+//
+//		occupant = new Person(randRoom.randomPosition(rand)); // creating the occupant and adding the occupant to the
+//																// random room
+//
+//		otherOccupant = new Person(randRoom.randomPosition(rand));
+//		
+//		
+//		
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+//		occupants.add(new Person(randRoom.randomPosition(rand)));
+		
+		//this.personAtDoor = false;
+		
+		occupants = new ArrayList<Person>();
+		
+		this.createRandomOccupants(1);
 		
 		objects.add(new RoundTable(50,40));
 		objects.get(0).setColour('g');
@@ -63,6 +82,36 @@ public class Building {
 		
 		objects.add(new ImageObject(330,120));
 		objects.get(4).setSize(4);
+	}
+	
+	private void createRandomOccupants(int count) {
+		Room randRoom;
+		for (int i = 0; i < count; i++) {
+			randRoom = this.getRandomRoom();
+			occupants.add(new Person(randRoom.randomPosition(rand)));
+		}
+	}
+	
+	public void addNewPerson(BuildingGui bg) {
+		createRandomOccupants(1);
+		showBuilding(bg);
+	}
+	
+	public void addNewPerson(BuildingGui bg, int x, int y) {
+		occupants.add(new Person(x,y));
+		showBuilding(bg);
+	}
+	
+	public void createNewRoundTable(BuildingGui bg, int x, int y, double s, char c) {
+		RoundTable table = new RoundTable(x,y);
+		table.setSize(s);
+		table.setColour(c);
+		objects.add(table);
+		showBuilding(bg);
+	}
+	
+	public void removeAllOccupants(BuildingGui bg) {
+		this.occupants.clear();
 	}
 
 	/**
@@ -99,6 +148,10 @@ public class Building {
 	private int getRandomRoomIndex() {
 		return this.rand.nextInt(this.allRooms.size());
 	}
+	
+	private int getRoomIndex(Room r) {
+		return this.allRooms.indexOf(r);
+	}
 
 	/**
 	 * Removes all rooms in currently instantiated within the building.
@@ -112,7 +165,9 @@ public class Building {
 			r.showRoom(bg);
 		}
 		
-		this.occupant.showPerson(bg);
+		for (Person p : this.occupants) {
+			p.showPerson(bg);
+		}
 		
 		for (RoomObject object : this.objects) {
 			if (object instanceof RoundTable) ((RoundTable) object).showObject(bg);
@@ -185,20 +240,22 @@ public class Building {
 		return -1; // if the occupant was not found in any of the rooms then return -1
 	}
 	
-	public void setNewRoom(Person occupant) {
-		int cRoom = getOccupantRoom(occupant);
+	public void setNewRoom(Person person) {
+		int cRoom = getOccupantRoom(person);
 		int dRoom = cRoom;
 		while (dRoom == cRoom) dRoom = getRandomRoomIndex();
 		
-		this.occupant.clearPath();
-		this.occupant.setStopped(false);
-		this.occupant.setPosition(60, 200);
-		//this.occupant.addDestination(this.allRooms.get(1).getDoorLocation());
-		this.occupant.addDestination(this.allRooms.get(getOccupantRoom(occupant)).getDoorLocation(-1));
-		this.occupant.addDestination(this.allRooms.get(getOccupantRoom(occupant)).getDoorLocation(1));
-		this.occupant.addDestination(this.allRooms.get(dRoom).getDoorLocation(1));
-		this.occupant.addDestination(this.allRooms.get(dRoom).getDoorLocation(-1));
-		this.occupant.addDestination(this.allRooms.get(dRoom).randomPosition(rand));
+		person.clearPath();
+		person.setStopped(false);
+		//this.occupant.setPosition(60, 200);
+		//this.occupant.addDestination(this.allRooms.get(getOccupantRoom(occupant)).getDoorLocation());
+		if (cRoom != -1) {
+			person.addDestination(this.allRooms.get(getOccupantRoom(person)).getDoorLocation(-1));
+			person.addDestination(this.allRooms.get(getOccupantRoom(person)).getDoorLocation(1));
+		}
+		person.addDestination(this.allRooms.get(dRoom).getDoorLocation(1));
+		person.addDestination(this.allRooms.get(dRoom).getDoorLocation(-1));
+		person.addDestination(this.allRooms.get(dRoom).randomPosition(rand));
 	}
 
 	public boolean getPersonAtDoor() {
@@ -207,23 +264,21 @@ public class Building {
 	}
 	
 	public void update() {
-		if (this.occupant.getStopped()) {
-			this.setNewRoom(this.occupant);
-		} else {
-			this.occupant.move(this);
+		
+		for (Person p : this.occupants) {
+			if (p.getStopped()) {
+				this.setNewRoom(p);
+			} else {
+				p.move(this);
+			}
 		}
 	}
 	
-	public boolean isInWall(int x, int y) {
+	public boolean checkCanMove(int x, int y) {
 		for (Room r : this.allRooms) {
-			
 			if (r.isInWall(x, y)) {
-				
-				System.out.println("IN WALL");
-				
 				return true;
 			}
-
 		}
 		
 		return false;
@@ -238,7 +293,11 @@ public class Building {
 
 		String res = ""; // The string that will be returned to the caller
 	
-		res += "Person:\n" + this.occupant.toString();
+		res += "Person:\n";
+		
+		for (Person p : this.occupants) {
+			res += p.toString() + " in room " + getOccupantRoom(p) + "\n";
+		}
 
 		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";
 		
