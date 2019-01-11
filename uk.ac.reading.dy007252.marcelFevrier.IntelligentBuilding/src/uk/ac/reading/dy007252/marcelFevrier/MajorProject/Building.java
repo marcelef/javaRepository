@@ -296,7 +296,7 @@ public class Building {
 		res += "Person:\n";
 		
 		for (Person p : this.occupants) {
-			res += p.toString() + " in room " + getOccupantRoom(p) + "\n";
+			res += p.toString() + " in " +  (getOccupantRoom(p) == -1 ? "no room" :  "room " + getOccupantRoom(p)) + "\n";
 		}
 
 		res += "The building's dimensions are " + this.xSize + "*" + this.ySize + ".\n\n";

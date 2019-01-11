@@ -3,7 +3,7 @@ package uk.ac.reading.dy007252.marcelFevrier.MajorProject;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class Person {
+public class Person{
 	
 	private Point position;	
 	private ArrayList<Point> path;

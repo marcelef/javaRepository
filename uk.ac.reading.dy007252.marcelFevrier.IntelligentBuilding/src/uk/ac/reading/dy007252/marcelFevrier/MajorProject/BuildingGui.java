@@ -5,6 +5,8 @@ package uk.ac.reading.dy007252.marcelFevrier.MajorProject;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.lang.model.type.NullType;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -17,6 +19,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -55,6 +59,8 @@ public class BuildingGui extends Application {
 	private double contextMenuX;
 	private double contextMenuY;
 	
+	private int wallThickness;
+	
 	public void showItem(int x, int y, int size, char colour) {
 		gc.setFill(colFromChar(colour));
 		gc.fillArc(x-size, y-size, size * 2, size * 2, 0, 360, ArcType.ROUND);
@@ -84,8 +90,8 @@ public class BuildingGui extends Application {
 	 }
 	
 	 void showWall(int x1, int y1, int x2, int y2) {
-		 gc.setStroke(colFromChar('k'));					// set the stroke colour
-		 gc.setLineWidth(3);
+		 gc.setStroke(colFromChar(GuiColour.BLACK.getValue()));					// set the stroke colour
+		 gc.setLineWidth(wallThickness);
 		 gc.strokeLine(x1, y1, x2, y2);		// draw line
 	 }
 	 
@@ -105,61 +111,69 @@ public class BuildingGui extends Application {
 		}
 	
 	private Color colFromChar(char c) {
-		Color ans = Color.BLACK;
 		switch(c) {
 		case 'b' : 
-			ans = Color.BLUE;
-			break;
+			return Color.BLUE;
 		case 'c' :
-			ans = Color.CYAN;
-			break;
+			return Color.CYAN;
 		case 'g' :
-			ans = Color.GREEN;
-			break;
+			return Color.GREEN;
 		case 'k' :
-			ans = Color.BLACK;
-			break;
+			return Color.BLACK;
 		case 'o' :
-			ans = Color.ORANGE;
-			break;
+			return Color.ORANGE;
 		case 'p' :
-			ans = Color.PINK;
-			break;
+			return Color.PINK;
 		case 'r' :
-			ans = Color.RED;
-			break;
+			return Color.RED;
 		case 'w' :
-			ans = Color.WHITE;
-			break;
+			return Color.WHITE;
 		case 'y' : 
-			ans = Color.YELLOW;
-			break;
+			return Color.YELLOW;
 		}
-		return ans;
+		return Color.BLACK;
 	}
 	
-	private char charFromCol(String s) {
-		switch (s.toUpperCase()) {
-		case "BLACK":
-			return 'k';
-		case "BLUE":
-			return 'b';
-		case "CYAN":
-			return 'c';
-		case "GREEN":
-			return 'g';
-		case "RED":
-			return 'r';
-		case "PINK":
-			return 'p';
-		case "ORANGE":
-			return 'o';
-		case "WHITE":
-			return 'w';
-		case "YELLOW":
-			return 'y';
-		}
-		return 'k';
+	private String openSingleInputDialog(String title, String header, String lableTxt) {
+		DialogCapture capture = new DialogCapture();
+		
+		Dialog<DialogCapture> dialog = new Dialog<DialogCapture>();
+		dialog.setTitle(title);
+		dialog.setHeaderText(header);
+		dialog.setWidth(100);
+		dialog.setHeight(500);
+		dialog.setResizable(false);
+		
+		Label lbl = new Label(lableTxt);
+		TextField txtField = new TextField();
+		
+		ButtonType doneBtn = new ButtonType("Done", ButtonData.OK_DONE);
+		
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == doneBtn) {
+				capture.add(txtField.getText());
+				return capture;
+			}
+			return null;
+		});
+		
+		GridPane grid = new GridPane();
+		grid.addRow(1, lbl, txtField);
+		
+		dialog.getDialogPane().getButtonTypes().addAll(doneBtn,  ButtonType.CLOSE);
+		dialog.getDialogPane().setContent(grid);
+		
+		Optional<DialogCapture> result = dialog.showAndWait();
+		
+		return result.get().readNext();
+	}
+	
+	private void errorAlert(String title, String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setContentText(message);
+		
+		alert.showAndWait();
 	}
 	
 	private DialogCapture getSizeAndColourValues() {
@@ -170,23 +184,25 @@ public class BuildingGui extends Application {
 		dialog.setHeaderText("Enter the size and colour of the new table.");
 		dialog.setWidth(100);
 		dialog.setHeight(500);
-		dialog.setResizable(true);
+		dialog.setResizable(false);
 		
 		Label sizeLbl = new Label("Size");
 		Label colourLbl = new Label("Colour");
-		TextField sizeTxt = new TextField();
+		TextField sizeTxt = new TextField("14");
 		
 		ComboBox<String> coloursList = new ComboBox<String>();
 		coloursList.getItems().addAll(
-				"Black",
-				"Blue",
-				"Cyan",
-				"Green",
-				"Red",
-				"Pink",
-				"Orange",
-				"White",
-				"Yellow");
+				"BLACK",
+				"BLUE",
+				"CYAN",
+				"GREEN",
+				"RED",
+				"PINK",
+				"ORANGE",
+				"WHITE",
+				"YELLOW");
+		
+		coloursList.getSelectionModel().selectFirst();
 		
 		GridPane grid = new GridPane();
 		
@@ -201,8 +217,12 @@ public class BuildingGui extends Application {
 		dialog.setResultConverter(dialogButton -> {
 		    if (dialogButton == doneBtn) {
 		        capture.add(sizeTxt.getText());
-		        capture.add(Character.toString(charFromCol(coloursList.getValue())));
+		        capture.add(Character.toString(GuiColour.reverse(coloursList.getValue())));
 		        return capture;
+		    }
+		    if (dialogButton == ButtonType.CANCEL) {
+		    	capture.clearCapture();
+		    	return capture;
 		    }
 		    return null;
 		});
@@ -224,7 +244,10 @@ public class BuildingGui extends Application {
 	
 	private void addNewRoundObject(double x, double y) {
 		DialogCapture capture = getSizeAndColourValues();
-		primaryBuilding.createNewRoundTable(this, (int) x, (int) y, Double.parseDouble(capture.get(0)), capture.get(1).charAt(0));
+		
+		if (!capture.isEmpty()) {
+			primaryBuilding.createNewRoundTable(this, (int) x, (int) y, Double.parseDouble(capture.get(0)), capture.get(1).charAt(0));
+		}
 	}
 	
 	private void removeAllOccupants() {
@@ -232,7 +255,6 @@ public class BuildingGui extends Application {
 	}
 	
 	private String defineNewBuilding() {
-		String res = "";
 		DialogCapture capture = new DialogCapture();
 		
 		Dialog<DialogCapture> dialog = new Dialog<DialogCapture>();
@@ -325,17 +347,20 @@ public class BuildingGui extends Application {
 		        capture.addAt(1, heightTxt.getText());
 		        return capture;
 		    }
+		    if (dialogButton == ButtonType.CANCEL) {
+		    	capture.clearCapture();
+		    	return capture;
+		    }
 		    return null;
 		});
 		
-		
 		Optional<DialogCapture> result = dialog.showAndWait();
 		
-		res = result.get().covertToBuilding();
-		
-		res += "";
-		
-		return res;
+		if (!result.get().isEmpty()) {
+			return result.get().covertToBuilding();
+		} else {
+			return null;
+		}
 	}
 	
 	private void clearCanvas() {
@@ -395,12 +420,31 @@ public class BuildingGui extends Application {
     		@Override
     		public void handle(ActionEvent event) {
     			removeAllOccupants();
+    			drawBuilding();
     		}
     	});
     	
     	removeMenu.getItems().addAll(removeAllOccupants);
     	
-    	menuBar.getMenus().addAll(fileMenu, helpMenu, addMenu, removeMenu);
+    	Menu settingsMenu = new Menu("Settings");
+    	
+    	MenuItem wallThicknessSetting = new MenuItem("Wall Thickness");
+    	wallThicknessSetting.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					String res = openSingleInputDialog("Wall Thickness", "Enter the thickness of the wall. The default value is 3.", "Thickness");
+					wallThickness = Integer.parseInt(res);
+					drawBuilding();
+				} catch (Exception e) {
+					errorAlert(" Error - Invalid Input", "Invalid input value. Value must be an integer.\n\n" + e);
+				}
+			}
+    	});
+    	
+    	settingsMenu.getItems().addAll(wallThicknessSetting);
+    	
+    	menuBar.getMenus().addAll(fileMenu, helpMenu, addMenu, removeMenu, settingsMenu);
     	
     	return menuBar;
     }
@@ -420,9 +464,12 @@ public class BuildingGui extends Application {
 		btnCreateNewBuild.setOnAction(new EventHandler<ActionEvent> () {
 			@Override
 			public void handle(ActionEvent event) {
-				primaryBuilding = new Building(defineNewBuilding());
-				clearCanvas();
-				drawBuilding();
+				String newBuild = defineNewBuilding();
+				if (newBuild != null) {
+					primaryBuilding = new Building(defineNewBuilding());
+					clearCanvas();
+					drawBuilding();
+				}
 			}
 		});
 	    
@@ -450,7 +497,9 @@ public class BuildingGui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	// TODO Auto-generated method stub
+
+    	wallThickness = 3;
+    	
     	this.stagePrimary= primaryStage;
     	this.stagePrimary.setTitle("Intelligent Building");
     	BorderPane bp = new BorderPane();

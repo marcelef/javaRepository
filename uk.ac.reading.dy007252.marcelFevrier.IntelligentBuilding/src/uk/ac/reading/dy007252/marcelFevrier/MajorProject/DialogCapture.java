@@ -52,4 +52,8 @@ public class DialogCapture {
 	public void addAt(int index, String s) {
 		capture.add(index, s);
 	}
+	
+	public boolean isEmpty() {
+		return this.capture.isEmpty();
+	}
 }
