@@ -2,12 +2,15 @@ package uk.ac.reading.dy007252.marcelFevrier.Spiral;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
@@ -23,16 +26,24 @@ public class Gui extends Application {
 	private AnimationTimer timer;
 	private VBox rightPane;
 	private double canvasSize;
+	private OrbitSystem system;
 	
 	private void drawSystem() {
 		gc.setFill(Color.WHITE);
-		gc.fillRect(0, 0, this.stagePrimary, this.canvasSize/2);
+		gc.fillRect(0.0, 0.0, this.canvasSize, this.canvasSize);
+		system.showSystem(this);
 	}
 	
 	public void drawItem(int x, int y, double size, char colour) {
 		gc.setFill(colFromChar(colour));
 		gc.fillArc(x-size, y-size, size * 2, size * 2, 0, 360, ArcType.ROUND);
 	}
+	
+	void showLine (int x1, int y1, int x2, int y2, double width, char colour) {
+		 gc.setStroke(colFromChar(colour));					// set the stroke colour
+		 gc.setLineWidth(width);
+		 gc.strokeLine(x1, y1, x2, y2);		// draw line
+	 }
 	
 	private Color colFromChar(char c) {
 		Color ans = Color.BLACK;
@@ -81,6 +92,25 @@ public class Gui extends Application {
 	
 	private ButtonBar setButtons() {
 		ButtonBar buttonBar = new ButtonBar();
+		
+		Button startBtn = new Button("Start");
+		startBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				timer.start();
+			}
+		});
+		
+		Button pauseBtn = new Button("Pause");
+		pauseBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				timer.stop();
+			}
+		});
+		
+		buttonBar.getButtons().addAll(startBtn, pauseBtn);
+		
 		return buttonBar;
 	}
 
@@ -92,7 +122,10 @@ public class Gui extends Application {
 		bp.setPadding(new Insets(10,20,10,20));
 		bp.setTop(setMenus());
 		
-		this.canvasSize = 500;
+		system = new OrbitSystem();
+		system.standardSetUp();
+		
+		this.canvasSize = 700;
 		
 		Group root = new Group();
 		Canvas canvas = new Canvas(this.canvasSize, this.canvasSize);
@@ -101,9 +134,13 @@ public class Gui extends Application {
 		
 		gc = canvas.getGraphicsContext2D();
 		
+		final long startNanoTime = System.nanoTime();
+		
 		timer = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				//
+				double t = (currentNanoTime - startNanoTime) / 10000000.0;
+				system.update(t);
+				drawSystem();
 			}
 		};
 		
@@ -114,7 +151,7 @@ public class Gui extends Application {
 		
 		bp.setBottom(setButtons());
 		
-		Scene scene = new Scene(bp, 800, 600);
+		Scene scene = new Scene(bp, 1000, 800);
 		scene.fillProperty().set(Color.DARKGRAY);
 		bp.prefHeightProperty().bind(scene.heightProperty());
 		bp.prefWidthProperty().bind(scene.widthProperty());

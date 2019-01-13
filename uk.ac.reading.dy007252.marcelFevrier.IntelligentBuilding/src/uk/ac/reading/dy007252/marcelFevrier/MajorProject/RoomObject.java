@@ -6,7 +6,7 @@ public abstract class RoomObject {
 	protected Point position;
 	protected double size;
 	protected char colour;
-	private int id;
+	protected int id;
 	private static int contId;
 	
 	public RoomObject(Point p){

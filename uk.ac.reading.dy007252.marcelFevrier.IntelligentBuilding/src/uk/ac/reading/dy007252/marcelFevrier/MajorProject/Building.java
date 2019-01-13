@@ -40,44 +40,26 @@ public class Building {
 		this.setBuilding(params);
 
 		rand = new Random();
-
-//		Room randRoom = this.getRandomRoom(); // random room to add the occupant to
-//
-//		occupant = new Person(randRoom.randomPosition(rand)); // creating the occupant and adding the occupant to the
-//																// random room
-//
-//		otherOccupant = new Person(randRoom.randomPosition(rand));
-//		
-//		
-//		
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-//		occupants.add(new Person(randRoom.randomPosition(rand)));
-		
-		//this.personAtDoor = false;
 		
 		occupants = new ArrayList<Person>();
 		
 		this.createRandomOccupants(1);
 		
 		objects.add(new RoundTable(50,40));
-		objects.get(0).setColour('g');
+		objects.get(0).setColour(GuiColour.GREEN.getValue());
 
 		objects.add(new SquareObject(80, 100));
-		objects.get(1).setColour('b');
+		objects.get(1).setColour(GuiColour.BLUE.getValue());
 		((SquareObject) objects.get(1)).setWidth(2);
 		
 		objects.add(new SquareObject(200, 130));
-		objects.get(2).setColour('k');
+		objects.get(2).setColour(GuiColour.BLACK.getValue());
 		objects.get(2).setSize(14);
 		((SquareObject) objects.get(2)).setWidth(1.5);
 		((SquareObject) objects.get(2)).setHeight(2.5);
 		
 		objects.add(new SquareObject(350, 20));
-		objects.get(3).setColour('o');
+		objects.get(3).setColour(GuiColour.ORANGE.getValue());
 		objects.get(3).setSize(20);
 		
 		objects.add(new ImageObject(330,120));
@@ -110,8 +92,18 @@ public class Building {
 		showBuilding(bg);
 	}
 	
-	public void removeAllOccupants(BuildingGui bg) {
+	public void removeAllOccupants() {
 		this.occupants.clear();
+	}
+	
+	public void removeAllObjects() {
+		this.objects.clear();
+	}
+	
+	public void changeOccupantsColour(char c) {
+		for (Person p : this.occupants) { 
+			p.changeColour(c);
+		}
 	}
 
 	/**

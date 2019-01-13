@@ -9,8 +9,10 @@ public class Person{
 	private ArrayList<Point> path;
 	private boolean hasStopped;
 	private int size;
+	private char colour;
 	
 	Person(Point p) {
+		this.colour = GuiColour.RED.getValue();
 		this.position = p;
 		this.path = new ArrayList<Point>();
 		this.hasStopped = true;
@@ -18,6 +20,7 @@ public class Person{
 	}
 	
 	Person(int x, int y) {
+		this.colour = GuiColour.RED.getValue();
 		this.position = new Point(x, y);
 		this.path = new ArrayList<Point>();
 		this.hasStopped = true;
@@ -57,7 +60,7 @@ public class Person{
 	}
 	
 	public void showPerson(BuildingGui bg) {
-		bg.showItem((int) this.position.getX(), (int) this.position.getY(), this.size, 'r');
+		bg.showItem((int) this.position.getX(), (int) this.position.getY(), this.size, this.colour);
 	}
 	
 	public String toString() {
@@ -78,6 +81,10 @@ public class Person{
 	
 	public int getY() {
 		return (int) this.position.getY();
+	}
+	
+	public void changeColour(char c) {
+		this.colour = c;
 	}
 	
 	private void moveTowards(Point d, Building b) {

@@ -7,7 +7,7 @@ public class RoundTable extends RoomObject {
 	public RoundTable(Point p) {
 		super(p);
 		this.size = 10;
-		this.colour = 'o';
+		this.colour = GuiColour.ORANGE.getValue();
 	}
 	
 	public RoundTable(int x, int y) {

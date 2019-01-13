@@ -134,6 +134,60 @@ public class BuildingGui extends Application {
 		return Color.BLACK;
 	}
 	
+	private char openColourPicker() {
+		
+		DialogCapture capture = new DialogCapture();
+		
+		Dialog<DialogCapture> dialog = new Dialog<DialogCapture>();
+		dialog.setTitle("Colour Picker");
+		dialog.setHeaderText("Choose a colour.");
+		dialog.setWidth(100);
+		dialog.setHeight(500);
+		dialog.setResizable(false);
+		
+		Label lbl = new Label("Colour");
+		
+		ComboBox<String> coloursList = new ComboBox<String>();
+		coloursList.getItems().addAll(
+				"BLACK",
+				"BLUE",
+				"CYAN",
+				"GREEN",
+				"RED",
+				"PINK",
+				"ORANGE",
+				"WHITE",
+				"YELLOW");
+		
+		coloursList.getSelectionModel().selectFirst();
+		
+		GridPane grid = new GridPane();
+		
+		grid.add(lbl, 1, 1);
+		grid.add(coloursList, 1, 2);
+		
+		
+		ButtonType doneBtn = new ButtonType("Done", ButtonData.OK_DONE);
+		
+		dialog.setResultConverter(dialogButton -> {
+		    if (dialogButton == doneBtn) {
+		        capture.add(Character.toString(GuiColour.reverse(coloursList.getValue())));
+		        return capture;
+		    }
+		    if (dialogButton == ButtonType.CANCEL) {
+		    	capture.clearCapture();
+		    	return capture;
+		    }
+		    return null;
+		});
+		
+		dialog.getDialogPane().getButtonTypes().addAll(doneBtn, ButtonType.CANCEL);
+		dialog.getDialogPane().setContent(grid);
+		Optional<DialogCapture> result = dialog.showAndWait();
+		
+		return result.get().readNext().charAt(0);
+	}
+	
 	private String openSingleInputDialog(String title, String header, String lableTxt) {
 		DialogCapture capture = new DialogCapture();
 		
@@ -149,23 +203,31 @@ public class BuildingGui extends Application {
 		
 		ButtonType doneBtn = new ButtonType("Done", ButtonData.OK_DONE);
 		
+		GridPane grid = new GridPane();
+		grid.addRow(1, lbl, txtField);
+		
 		dialog.setResultConverter(dialogButton -> {
 			if (dialogButton == doneBtn) {
 				capture.add(txtField.getText());
 				return capture;
 			}
+			if (dialogButton == ButtonType.CANCEL) {
+		    	capture.clearCapture();
+		    	return capture;
+		    }
 			return null;
 		});
 		
-		GridPane grid = new GridPane();
-		grid.addRow(1, lbl, txtField);
-		
-		dialog.getDialogPane().getButtonTypes().addAll(doneBtn,  ButtonType.CLOSE);
+		dialog.getDialogPane().getButtonTypes().addAll(doneBtn,  ButtonType.CANCEL);
 		dialog.getDialogPane().setContent(grid);
 		
 		Optional<DialogCapture> result = dialog.showAndWait();
 		
-		return result.get().readNext();
+		if (!result.get().isEmpty()) {
+			return result.get().readNext();
+		} else {
+			return null;
+		}
 	}
 	
 	private void errorAlert(String title, String message) {
@@ -251,7 +313,7 @@ public class BuildingGui extends Application {
 	}
 	
 	private void removeAllOccupants() {
-		primaryBuilding.removeAllOccupants(this);
+		primaryBuilding.removeAllOccupants();
 	}
 	
 	private String defineNewBuilding() {
@@ -424,7 +486,16 @@ public class BuildingGui extends Application {
     		}
     	});
     	
-    	removeMenu.getItems().addAll(removeAllOccupants);
+    	MenuItem removeAllObjects = new MenuItem("Remove All Objects");
+    	removeAllObjects.setOnAction(new EventHandler<ActionEvent> () {
+			@Override
+			public void handle(ActionEvent event) {
+				primaryBuilding.removeAllObjects();
+				drawBuilding();
+			}
+    	});
+    	
+    	removeMenu.getItems().addAll(removeAllOccupants, removeAllObjects);
     	
     	Menu settingsMenu = new Menu("Settings");
     	
@@ -432,17 +503,28 @@ public class BuildingGui extends Application {
     	wallThicknessSetting.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					String res = openSingleInputDialog("Wall Thickness", "Enter the thickness of the wall. The default value is 3.", "Thickness");
-					wallThickness = Integer.parseInt(res);
-					drawBuilding();
-				} catch (Exception e) {
-					errorAlert(" Error - Invalid Input", "Invalid input value. Value must be an integer.\n\n" + e);
+				String res = openSingleInputDialog("Wall Thickness", "Enter the thickness of the wall. The default value is 3.", "Thickness");
+				if (res != null) {
+					try {
+							wallThickness = Integer.parseInt(res);
+							drawBuilding();
+					} catch (Exception e) {
+						errorAlert(" Error - Invalid Input", "Invalid input value. Value must be an integer.\n\n" + e);
+					}
 				}
 			}
     	});
     	
-    	settingsMenu.getItems().addAll(wallThicknessSetting);
+    	MenuItem personColourSetting = new MenuItem("Person Colour");
+    	personColourSetting.setOnAction(new EventHandler<ActionEvent> () {
+			@Override
+			public void handle(ActionEvent event) {
+				primaryBuilding.changeOccupantsColour(openColourPicker());
+				drawBuilding();
+			}
+    	});
+    	
+    	settingsMenu.getItems().addAll(wallThicknessSetting, personColourSetting);
     	
     	menuBar.getMenus().addAll(fileMenu, helpMenu, addMenu, removeMenu, settingsMenu);
     	

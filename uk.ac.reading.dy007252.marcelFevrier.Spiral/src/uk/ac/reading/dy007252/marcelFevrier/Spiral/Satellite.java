@@ -7,18 +7,21 @@ public class Satellite {
 	private Point position;
 	private Point origin;
 	private double size;
-	
+	private double speed;
+	private double orbitSize;
 	
 	public Satellite() {
 		this.position = new Point(0,0);
 		this.origin = new Point(0,0);
-		this.size = 1;
+		this.size = 100;
+		this.speed = 1;
 	}
 	
 	public Satellite(Point pos, Point or, double s) {
 		this.position = pos;
 		this.origin = or;
 		this.size = s;
+		this.speed = 1;
 	}
 	
 	public void setPosition(Point p) {
@@ -57,7 +60,29 @@ public class Satellite {
 		this.position.translate(dx, dy);
 	}
 	
-	public void drawObject(Gui gui) {
+	public void showSatellite(Gui gui) {
 		gui.drawItem(this.getX(), this.getY(), this.size, 'k');
+	}
+	
+	public void setOrbitSize(double s) {
+		orbitSize = s;
+	}
+	
+	public void setSpeed(double s) {
+		speed = s;
+	}
+	
+	public void resetPosition() {
+		double x = 250 + orbitSize * Math.cos(0);
+		double y = 250 + orbitSize * Math.sin(0);
+		
+		position.setLocation(x, y);
+	}
+	
+	public void update(double t) {
+		double x = 350 + orbitSize * Math.cos(speed * t);
+		double y = 350 + orbitSize * Math.sin(speed * t);
+		
+		position.setLocation(x, y);
 	}
 }
