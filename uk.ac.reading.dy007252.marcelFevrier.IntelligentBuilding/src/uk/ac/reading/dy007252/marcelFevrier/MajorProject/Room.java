@@ -36,6 +36,7 @@ public class Room {
 		
 		this.doorSize = 20;
 	}
+	
 
 	/**
 	 * Determines whether a give coordinate is within the current room or not.
@@ -86,16 +87,14 @@ public class Room {
 		
 		if (isInRoom(x,y)) {
 			if (y == corners[0].getY() || y == corners[1].getY() || x == corners[0].getX() || x == corners[1].getX()) {
-				if (!isAtDoor(x,y)) {
-					return true;
-				}
+				return true;
 			}
 		}
 		
 		return false;
 	}
 	
-	private boolean isAtDoor(int x, int y) {
+	public boolean isAtDoor(int x, int y) {
 		if (x > (this.door.getX() - this.doorSize/2) && x < (this.door.getX() + this.doorSize/2)) { // AT THE MOMENT THIS > IS NOT A >= WHICH ALLOWS THE PERSON TO MOVE AROUND THE WALL
 			return true;
 		}

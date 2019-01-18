@@ -264,15 +264,37 @@ public class Building {
 				p.move(this);
 			}
 		}
+		
+		for (Room r : this.allRooms) {
+			
+		}
 	}
 	
-	public boolean checkCanMove(int x, int y) {
+	public boolean checkCanMove(int x, int y, Point destinationRoom) {
+		
+		boolean cannotMove = false;
+		
 		for (Room r : this.allRooms) {
+			
 			if (r.isInWall(x, y)) {
-				return true;
+				if (!r.isAtDoor(x, y)) {
+					cannotMove = true;
+				} else {
+					if (!r.isInRoom(destinationRoom) && isInARoom(x,y)) {
+						cannotMove = true;
+					}
+				}
 			}
+			
 		}
 		
+		return cannotMove;
+	}
+	
+	private boolean isInARoom(int x, int y) {
+		for (Room r : allRooms) {
+			return true;
+		}
 		return false;
 	}
 

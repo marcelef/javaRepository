@@ -15,15 +15,31 @@ public class OrbitSystem {
 	}
 	
 	public void standardSetUp() {
+		
+		/* 
+		 * Nice presets (in order of (OrbitSize, Speed)
+		 * 
+		 * [(100, 0.06), (250, 0.01), (350, 0.08)] <- Pentagram
+		 * 
+		 * [(40, 0.025), (300, 0.025), (350, 0.045)] Increasing the speed of the last satellite creates more detail
+		 * 
+		 */
+		
 		satellites.clear();
 		satellites.add(new Satellite(new Point(350,250), new Point(350,350), 10));
-		satellites.get(0).setOrbitSize(100);
-		satellites.get(0).setSpeed(0.02);
+		satellites.get(0).setOrbitSize(50);
+		satellites.get(0).setSpeed(0.025);
 		satellites.get(0).resetPosition();
+		
 		satellites.add(new Satellite(new Point(350,150), new Point(350,350), 10));
-		satellites.get(1).setOrbitSize(200);
-		satellites.get(1).setSpeed(0.07);
+		satellites.get(1).setOrbitSize(300);
+		satellites.get(1).setSpeed(0.025);
 		satellites.get(1).resetPosition();
+		
+		satellites.add(new Satellite(new Point(0,0), new Point(0,0), 10));
+		satellites.get(2).setOrbitSize(350);
+		satellites.get(2).setSpeed(0.055);
+		satellites.get(2).resetPosition();
 	}
 	
 	public void showSystem(Gui gui) {
@@ -40,7 +56,7 @@ public class OrbitSystem {
 		count++;
 		
 		for(Satellite s : satellites) {
-			s.update(t);
+			s.update(count);
 		}
 		
 		
@@ -55,7 +71,11 @@ public class OrbitSystem {
 		int y1 = satellites.get(0).getY();
 		int x2 = satellites.get(1).getX();
 		int y2 = satellites.get(1).getY();
+		int x3 = satellites.get(2).getX();
+		int y3 = satellites.get(2).getY();
 		
 		lines.add(new Line(x1, y1, x2, y2));
+		lines.add(new Line(x2, y2, x3, y3));
+		
 	}
 }

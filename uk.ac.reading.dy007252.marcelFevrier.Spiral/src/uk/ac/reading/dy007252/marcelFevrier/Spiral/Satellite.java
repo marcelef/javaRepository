@@ -73,8 +73,8 @@ public class Satellite {
 	}
 	
 	public void resetPosition() {
-		double x = 250 + orbitSize * Math.cos(0);
-		double y = 250 + orbitSize * Math.sin(0);
+		double x = 350 + orbitSize * Math.cos(0);
+		double y = 350 + orbitSize * Math.sin(0);
 		
 		position.setLocation(x, y);
 	}

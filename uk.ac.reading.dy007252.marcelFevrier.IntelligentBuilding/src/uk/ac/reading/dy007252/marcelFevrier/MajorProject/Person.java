@@ -91,11 +91,11 @@ public class Person{
 		int dx = 0;
 		int dy = 0;
 		
-		if (this.position.getX() < d.getX() && !b.checkCanMove(this.getX() + 1, this.getY())) dx = 1;
-		else if (this.position.getX() > d.getX() && !b.checkCanMove(this.getX() - 1, this.getY())) dx = -1;
+		if (this.position.getX() < d.getX() && !b.checkCanMove(this.getX() + 1, this.getY(), this.getDestination())) dx = 1;
+		else if (this.position.getX() > d.getX() && !b.checkCanMove(this.getX() - 1, this.getY(), this.getDestination())) dx = -1;
 		
-		if (this.position.getY() < d.getY() && !b.checkCanMove(this.getX(), this.getY() + 1)) dy = 1;
-		else if (this.position.getY() > d.getY() && !b.checkCanMove(this.getX() + 1, this.getY() - 1)) dy = -1;
+		if (this.position.getY() < d.getY() && !b.checkCanMove(this.getX(), this.getY() + 1, this.getDestination())) dy = 1;
+		else if (this.position.getY() > d.getY() && !b.checkCanMove(this.getX() + 1, this.getY() - 1, this.getDestination())) dy = -1;
 		
 		this.position.translate(dx, dy);
 	}

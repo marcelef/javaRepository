@@ -138,7 +138,7 @@ public class Gui extends Application {
 		
 		timer = new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				double t = (currentNanoTime - startNanoTime) / 10000000.0;
+				double t = (currentNanoTime - startNanoTime) / 1000000.0;
 				system.update(t);
 				drawSystem();
 			}
