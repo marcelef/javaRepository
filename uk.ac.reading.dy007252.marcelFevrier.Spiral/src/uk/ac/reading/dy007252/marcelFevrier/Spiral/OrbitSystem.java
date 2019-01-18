@@ -19,7 +19,7 @@ public class OrbitSystem {
 		/* 
 		 * Nice presets (in order of (OrbitSize, Speed)
 		 * 
-		 * [(100, 0.06), (250, 0.01), (350, 0.08)] <- Pentagram
+		 * [(100, 0.06), (250, 0.01), (350, 0.035)] <- Pentagram
 		 * 
 		 * [(40, 0.025), (300, 0.025), (350, 0.045)] Increasing the speed of the last satellite creates more detail
 		 * 
@@ -27,18 +27,18 @@ public class OrbitSystem {
 		
 		satellites.clear();
 		satellites.add(new Satellite(new Point(350,250), new Point(350,350), 10));
-		satellites.get(0).setOrbitSize(50);
-		satellites.get(0).setSpeed(0.025);
+		satellites.get(0).setOrbitSize(100);
+		satellites.get(0).setSpeed(0.06);
 		satellites.get(0).resetPosition();
 		
 		satellites.add(new Satellite(new Point(350,150), new Point(350,350), 10));
-		satellites.get(1).setOrbitSize(300);
-		satellites.get(1).setSpeed(0.025);
+		satellites.get(1).setOrbitSize(250);
+		satellites.get(1).setSpeed(0.01);
 		satellites.get(1).resetPosition();
 		
 		satellites.add(new Satellite(new Point(0,0), new Point(0,0), 10));
 		satellites.get(2).setOrbitSize(350);
-		satellites.get(2).setSpeed(0.055);
+		satellites.get(2).setSpeed(0.06);
 		satellites.get(2).resetPosition();
 	}
 	
